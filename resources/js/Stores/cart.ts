@@ -35,6 +35,31 @@ export const useCartStore = defineStore('cart', () => {
     }
   }
 
+   async function clearCart() {
+    if (!cart.value) {
+      return;
+    }
+    await CartService.clearCart();
+    cart.value = {
+      ...cart.value,
+      products: [],
+    };
+  }
+
+  async function checkoutCart() {
+    if (!cart.value) {
+      return;
+    }
+    try {
+      const order = await CartService.checkoutCart();
+      cart.value = null; // Clear the cart after successful checkout
+      return order;
+    } catch (error) {
+      console.error('Checkout failed:', error);
+      throw error; // Re-throw the error for further handling if needed
+    }
+  }
+
   async function addToCart(product: Product, quantity: number = 1) {
     if (!cart.value) {
       await fetchCart();
@@ -64,17 +89,6 @@ export const useCartStore = defineStore('cart', () => {
     );
   }
 
-  async function clearCart() {
-    if (!cart.value) {
-      return;
-    }
-    await CartService.clearCart();
-    cart.value = {
-      ...cart.value,
-      products: [],
-    };
-  }
-
   return {
     cart,
     cartProducts,
@@ -83,6 +97,7 @@ export const useCartStore = defineStore('cart', () => {
     fetchCart,
     clearCart,
     addToCart,
+    checkoutCart,
     removeFromCart,
   };
 });

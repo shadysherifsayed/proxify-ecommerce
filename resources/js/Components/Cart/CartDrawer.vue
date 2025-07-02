@@ -32,7 +32,7 @@ const { cartProducts, cartTotal, cartCount } = storeToRefs(cartStore);
       </v-card-subtitle>
       <v-divider class="my-2"></v-divider>
       <v-card-text class="flex-grow-1 overflow-auto py-0">
-        <v-list density="compact" nav>
+        <v-list density="compact">
           <cart-item
             v-for="(product, index) in cartProducts"
             :key="index"
@@ -49,6 +49,15 @@ const { cartProducts, cartTotal, cartCount } = storeToRefs(cartStore);
             "
           />
         </v-list>
+        <div v-if="cartCount === 0" class="d-flex flex-column justify-center align-center">
+          <v-icon
+            icon="mdi-cart-outline"
+            size="48"
+            color="grey-lighten-1"
+            class="mb-2"
+          ></v-icon>
+          <p class="text-body-2 text-grey-darken-1 mb-0">Your cart is empty</p>
+        </div>
       </v-card-text>
       <v-divider></v-divider>
       <v-card-actions class="pa-0">
@@ -94,22 +103,10 @@ const { cartProducts, cartTotal, cartCount } = storeToRefs(cartStore);
               :disabled="cartCount === 0"
               prepend-icon="mdi-credit-card"
               class="text-none font-weight-bold"
+              @click="cartStore.checkoutCart"
             >
               Proceed to Checkout
             </v-btn>
-          </div>
-
-          <!-- Empty Cart Message -->
-          <div v-if="cartCount === 0" class="text-center py-4">
-            <v-icon
-              icon="mdi-cart-outline"
-              size="48"
-              color="grey-lighten-1"
-              class="mb-2"
-            ></v-icon>
-            <p class="text-body-2 text-grey-darken-1 mb-0">
-              Your cart is empty
-            </p>
           </div>
         </div>
       </v-card-actions>

@@ -1,6 +1,7 @@
+import router from '@/Router';
 import AuthService from '@/Services/AuthService';
-import { User } from '@/Tpes/entities';
-import { LoginRequest, RegisterRequest } from '@/Tpes/requests';
+import { User } from '@/Types/entities';
+import { LoginRequest, RegisterRequest } from '@/Types/requests';
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 
@@ -15,33 +16,47 @@ export const useAuthStore = defineStore(
         async function login(data: LoginRequest) {
             try {
                 const response = await AuthService.login(data);
-                user.value = response.user;
-                token.value = response.token;
+                console.log('Login response:', response);
+                user.value = response.data;
+                console.log('User logged in:', user.value);
+                setTokenAndNavigate(user.value.token ?? '');
             } catch (error) {
                 console.error('Login failed:', error);
             }
         }
 
         async function logout() {
-            await AuthService.logout();
-            user.value = null;
-            token.value = null;
+            try {
+                await AuthService.logout();
+            } finally {
+                user.value = null;
+                token.value = null;
+                router.push('/login');
+            }
+                
         }
 
         async function register(data: RegisterRequest) {
              try {
                 const response = await AuthService.register(data);
-                user.value = response.user;
-                token.value = response.token;
+                user.value = response.data;
+                setTokenAndNavigate(user.value.token ?? '');
             } catch (error) {
                 console.error('Login failed:', error);
             }
         }
 
+        function setTokenAndNavigate(t: string) {
+            console.log('Setting token:', t);
+            // token.value = t;
+            AuthService.setToken(t);
+            router.push('/');
+        }
+
         async function fetchUser() {
             try {
                 const response = await AuthService.user();
-                user.value = response.user;
+                user.value = response.data;
             } catch (error) {
                 console.error('Fetch user failed:', error);
             }
@@ -56,9 +71,9 @@ export const useAuthStore = defineStore(
             fetchUser,
         };
     },
-    {
-        persist: {
-            pick: ['token'],
-        },
-    },
+    // {
+    //     persist: {
+    //         pick: ['token'],
+    //     },
+    // },
 );

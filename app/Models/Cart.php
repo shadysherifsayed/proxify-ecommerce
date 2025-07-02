@@ -9,4 +9,13 @@ class Cart extends Model
 {
     /** @use HasFactory<\Database\Factories\CartFactory> */
     use HasFactory;
+
+
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, CartProduct::class)
+            ->using(CartProduct::class)
+            ->withPivot('quantity')
+            ->withTimestamps();
+    }
 }

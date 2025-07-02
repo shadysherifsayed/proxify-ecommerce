@@ -30,7 +30,7 @@
 }
 
 .background-image {
-    background-image: url('https://images.pexels.com/photos/3944405/pexels-photo-3944405.jpeg');
+    background-image: url('https://images.pexels.com/photos/5926398/pexels-photo-5926398.jpeg');
     background-size: cover;
     background-position: center;
     position: absolute;

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Services\CartService;
+use Illuminate\Database\Eloquent\Casts\Json;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class CartController extends Controller
 {
@@ -19,11 +21,11 @@ class CartController extends Controller
      */
     public function index(Request $request)
     {
-        $products = $this->cartService->showDetails(
+        $cart = $this->cartService->getCart(
             $request->user()
         );
 
-        return view('products.index', compact('products'));
+        return new JsonResource($cart);
     }
 
     /**
@@ -43,9 +45,8 @@ class CartController extends Controller
      */
     public function destroy(Request $request)
     {
-        $this->cartService->removeProduct(
+        $this->cartService->clearCart(
             $request->user(),
-            $request->product
         );
     }
 }

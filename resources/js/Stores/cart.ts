@@ -1,0 +1,88 @@
+import CartService from '@/Services/CartService';
+import { Cart, Product } from '@/Types/entities';
+import { defineStore } from 'pinia';
+import { computed, ref } from 'vue';
+
+export const useCartStore = defineStore('cart', () => {
+  const cart = ref<Cart | null>(null);
+
+  const cartProducts = computed(() => cart.value?.products || []);
+
+  const cartTotal = computed(() => {
+    if (!cart.value) {
+      return 0;
+    }
+    return cart.value.products.reduce((total, product) => {
+      return total + product.price * product.pivot.quantity;
+    }, 0);
+  });
+
+  const cartCount = computed(() => {
+    if (!cart.value) {
+      return 0;
+    }
+    return cart.value.products.reduce((count, product) => {
+      return count + product.pivot.quantity;
+    }, 0);
+  });
+
+  async function fetchCart() {
+    try {
+      const response = await CartService.fetchCart();
+      cart.value = response.data;
+    } catch {
+      cart.value = null;
+    }
+  }
+
+  async function addToCart(product: Product, quantity: number = 1) {
+    if (!cart.value) {
+      await fetchCart();
+    }
+    if (!cart.value) {
+      return;
+    }
+    await CartService.addToCart(product.id, quantity);
+    const existingProduct = cart.value.products.find(
+      (item) => item.id === product.id,
+    );
+    if (existingProduct) {
+      existingProduct.pivot.quantity = quantity;
+    } else {
+      const newProduct = { ...product, pivot: { quantity } };
+      cart.value.products.push(newProduct);
+    }
+  }
+
+  function removeFromCart(product: Product) {
+    if (!cart.value) {
+      return;
+    }
+    CartService.removeFromCart(product.id);
+    cart.value.products = cart.value.products.filter(
+      (item) => item.id !== product.id,
+    );
+  }
+
+  async function clearCart() {
+    if (!cart.value) {
+      return;
+    }
+    await CartService.clearCart();
+    cart.value = {
+      ...cart.value,
+      products: [],
+    };
+  }
+
+  return {
+    cart,
+    cartProducts,
+    cartTotal,
+    cartCount,
+    fetchCart,
+    clearCart,
+    addToCart,
+    removeFromCart,
+  };
+});

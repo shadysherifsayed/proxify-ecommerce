@@ -38,7 +38,6 @@ const vuetify = createVuetify({
         },
         themes: {
             light: lightTheme,
-            // dark: darkTheme,
         },
     },
     defaults: {
@@ -47,8 +46,8 @@ const vuetify = createVuetify({
             elevation: 0,
             rounded: 'lg',
         },
-        VTextField: { variant: 'outlined', rounded: 'lg', color: 'primary' },
-        VBtn: { variant: 'tonal', rounded: 'lg', color: 'primary' },
+        VTextField: { variant: 'outlined', rounded: 'lg', color: 'primary', density: 'compact' },
+        VBtn: { variant: 'tonal', rounded: 'lg', color: 'primary',  },
     },
     icons: {
         defaultSet: 'mdi',

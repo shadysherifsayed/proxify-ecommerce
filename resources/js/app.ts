@@ -1,10 +1,8 @@
-import { createPinia } from 'pinia'
 import { createApp } from 'vue'
 import App from '@/App.vue'
 import vuetify from '@/Plugins/vuetify'
+import pinia from '@/Plugins/pinia'
 import router from '@/Router'
-
-const pinia = createPinia()
 
 createApp(App)
   .use(vuetify)

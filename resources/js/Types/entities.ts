@@ -1,0 +1,53 @@
+export interface User {
+  id: number;
+  name: string;
+  email: string;
+  token?: string;
+  avatar?: string;
+  email_verified_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Category {
+  id: number;
+  name: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Product {
+  id: number;
+  title: string;
+  description: string;
+  image: string;
+  price: number;
+  reviews_count: number;
+  rating: number;
+  created_at: string;
+  updated_at: string;
+  category: Category;
+}
+
+export type CartProduct = Product & { pivot: { quantity: number } };
+
+export interface Cart {
+  id: number;
+  user_id: number;
+  total_price: number;
+  created_at: string;
+  updated_at: string;
+  products: CartProduct[];
+}
+
+export type OrderProduct = Product & { pivot: { quantity: number, price: number } };
+
+export interface Order {
+  id: number;
+  user_id: number;
+  total_price: number;
+  status: string;
+  created_at: string;
+  updated_at: string;
+  products: OrderProduct[];
+}

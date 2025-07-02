@@ -1,8 +1,9 @@
-import { Product } from '@/Tpes/entities';
+import { PaginationCursorResponse } from '@/Types/responses';
 import { BaseService } from './BaseService';
+import { Product } from '@/Types/entities';
 
 class ProductService extends BaseService {
-    list(): Promise<Product[]> {
+    list(): Promise<PaginationCursorResponse<Product[]>> {
         return this.send('GET', 'products');
     }
 }

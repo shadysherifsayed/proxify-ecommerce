@@ -1,50 +1,48 @@
-<!-- pages/Register.vue -->
 <template>
-  <AuthLayout>
-    <h1 class="text-h4 font-weight-bold text-white mb-2">Register</h1>
-    <p class="text-white mb-4">
-      Already have an account? <RouterLink to="/login" class="text-primary">Login</RouterLink>
-    </p>
+    <AuthLayout>
+        <v-card-title class="text-h5 text-center">Register</v-card-title>
+        <v-card-text>
+            <v-form>
+                <v-text-field label="Name" required v-model="form.name" />
+                <v-text-field label="Email" type="email" required v-model="form.email" />
+                <v-text-field label="Password" type="password" required v-model="form.password" />
+                <v-text-field label="Password" type="password" required v-model="form.password_confirmation" />
 
-    <v-form>
-      <v-text-field
-        v-model="name"
-        label="Name"
-        variant="outlined"
-        color="primary"
-        class="mb-3"
-        placeholder="Your name"
-        hide-details
-      />
-      <v-text-field
-        v-model="email"
-        label="Email"
-        variant="outlined"
-        color="primary"
-        class="mb-3"
-        placeholder="you@example.com"
-        hide-details
-      />
-      <v-text-field
-        v-model="password"
-        label="Password"
-        type="password"
-        variant="outlined"
-        color="primary"
-        placeholder="Create a password"
-        hide-details
-      />
-
-      <v-btn color="primary" block class="mt-2">Register</v-btn>
-    </v-form>
-  </AuthLayout>
+                <v-btn block class="mt-4" @click="register" :loading="isLoading" :disabled="isLoading">Create Account</v-btn>
+            </v-form>
+        </v-card-text>
+        <v-card-actions class="justify-center">
+            <v-btn text @click="$router.push('login')"
+            :disabled="isLoading"
+            >Already have an account? Login</v-btn>
+        </v-card-actions>
+    </AuthLayout>
 </template>
 
 <script setup lang="ts">
-import AuthLayout from '@/layouts/auth/AuthLayout.vue'
-import { ref } from 'vue'
+import AuthLayout from '@/layouts/AuthLayout.vue';
+import { useAuthStore } from '@/Stores/auth';
+import { ref } from 'vue';
 
-const name = ref('')
-const email = ref('')
-const password = ref('')
+const form = ref<RegisterRequest>({
+    name: '',
+    email: '',
+    password: '',
+    password_confirmation: '',
+});
+
+const isLoading = ref(false)
+
+const authStore = useAuthStore()
+
+async function register() {
+    try {
+        isLoading.value = true
+        await authStore.register(form.value)
+    } finally {
+        isLoading.value = false
+    }
+}
+
+
 </script>

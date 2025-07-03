@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\OrderStatus;
 use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
@@ -14,9 +15,18 @@ class Order extends Model
      * @var array<string>
      */
     protected $fillable = [
-        'user_id',
-        'total',
         'status',
+        'user_id',
+        'total_price',
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'status' => OrderStatus::class,
     ];
 
     /**
@@ -32,7 +42,7 @@ class Order extends Model
      */
     public function products()
     {
-        return $this->belongsToMany(Product::class)
+        return $this->belongsToMany(Product::class, OrderProduct::class)
             ->using(OrderProduct::class)
             ->withPivot(['quantity', 'price']);
     }

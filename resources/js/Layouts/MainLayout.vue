@@ -55,7 +55,7 @@
           color="primary"
           @click="cartDrawer = true"
         >
-          <v-badge color="red" :content="cart?.products?.length ?? 0" overlap>
+          <v-badge color="primary" variant="tonal" :content="cartCount" overlap>
             <v-icon>mdi-cart</v-icon>
           </v-badge>
         </v-btn>
@@ -81,7 +81,7 @@ import CartDrawer from '@/Components/Cart/CartDrawer.vue';
 const productsStore = useProductsStore();
 
 const cartStore = useCartStore();
-const { cart } = storeToRefs(cartStore);
+const { cartCount } = storeToRefs(cartStore);
 const cartDrawer = ref(false);
 
 const drawer = ref(true);

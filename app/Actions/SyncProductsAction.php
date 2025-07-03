@@ -2,12 +2,13 @@
 
 namespace App\Actions;
 
-use App\Clients\FakeStore\ProductClient;
 use App\Models\Product;
+use App\Models\Category;
+use App\Clients\FakeStore\ProductClient;
 
-class SyncProducts
+class SyncProductsAction
 {
-    public function __construct(private ProductClient $productClient, private SyncCategory $syncCategory) {}
+    public function __construct(private ProductClient $productClient) {}
 
     public function execute(): void
     {
@@ -31,8 +32,8 @@ class SyncProducts
                     'description' => $product['description'],
                     'image' => $product['image'],
                     'rating' => $product['rating']['rate'] ?? 0,
-                    'reviews' => $product['rating']['count'] ?? 0,
-                    'category_id' => $this->syncCategory->execute(['name' => $product['category'] ?? ''])?->id,
+                    'reviews_count' => $product['rating']['count'] ?? 0,
+                    'category_id' => Category::firstOrCreate(['name' => $product['category']])->id,
                 ]
             );
         }

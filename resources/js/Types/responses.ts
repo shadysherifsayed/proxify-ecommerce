@@ -1,5 +1,4 @@
-import { Product } from "./entities";
-
+import { Product, User } from "./entities";
 
 export interface Pagination {
     next: string | null;
@@ -12,12 +11,15 @@ export interface DataWrapper<T> {
 
 export interface PaginationCursorResponse<T> {
     data: T;
-    next_cursor: string | null;
     prev_cursor: string | null;
+    next_cursor: string | null;
 }
 
 export interface ProductListResponse {
-    data: Product[]
-    next_cursor: string | null;
-    prev_cursor: string | null;
+    products: PaginationCursorResponse<Product[]>;
+}
+
+export interface AuthenticatedResponse {
+    user: User;
+    token: string;
 }

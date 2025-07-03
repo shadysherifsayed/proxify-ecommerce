@@ -75,7 +75,7 @@ const { cartProducts, cartTotal, cartCount } = storeToRefs(cartStore);
               color="error"
               size="small"
               prepend-icon="mdi-delete-sweep"
-              @click="cartStore.clearCart()"
+              @click="cartStore.clearCart"
             >
               Clear Cart
             </v-btn>

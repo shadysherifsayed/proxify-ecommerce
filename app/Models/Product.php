@@ -16,7 +16,7 @@ class Product extends Model
      *
      * @var array
      */
-    protected $fillable = ['title', 'price', 'description', 'image', 'rating', 'reviews', 'category_id'];
+    protected $fillable = ['title', 'price', 'description', 'image', 'rating', 'reviews_count', 'category_id', 'external_id'];
 
 
     /**
@@ -27,7 +27,7 @@ class Product extends Model
     protected $casts = [
         'price' => 'float',
         'rating' => 'float',
-        'reviews' => 'integer',
+        'reviews_count' => 'integer',
     ];
 
 

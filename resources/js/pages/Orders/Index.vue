@@ -33,8 +33,6 @@
                 v-model="searchQuery"
                 placeholder="Search orders by ID or product name..."
                 prepend-inner-icon="mdi-magnify"
-                variant="outlined"
-                density="compact"
                 hide-details
                 clearable
               />

@@ -2,8 +2,9 @@
 
 namespace App\Console\Commands;
 
-use App\Actions\SyncProducts as SyncProductsAction;
+use App\Models\Product;
 use Illuminate\Console\Command;
+use App\Actions\SyncProductsAction;
 
 class SyncProducts extends Command
 {
@@ -26,10 +27,16 @@ class SyncProducts extends Command
      */
     public function handle(SyncProductsAction $syncProducts): void
     {
+        $startTime = microtime(true);
+
         $this->info('Starting product sync...');
 
         $syncProducts->execute();
 
-        $this->info('Product sync completed successfully.');
+        $endTime = microtime(true);
+
+        $this->info('Product sync completed in ' . round($endTime - $startTime, 2) . ' seconds.');
+        
+        $this->info(sprintf('%s products have been synced.', Product::count()));
     }
 }

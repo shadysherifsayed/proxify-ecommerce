@@ -129,8 +129,9 @@
               </div>
             </div>
 
+            <v-divider /> 
             <!-- Order Summary -->
-            <div class="bg-grey-lighten-4 pa-4">
+            <div class="pa-4">
               <div class="d-flex justify-space-between align-center">
                 <span class="text-h6 font-weight-medium">Total Amount</span>
                 <span class="text-h5 font-weight-bold text-primary">

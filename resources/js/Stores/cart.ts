@@ -29,7 +29,7 @@ export const useCartStore = defineStore('cart', () => {
   async function fetchCart() {
     try {
       const response = await CartService.fetchCart();
-      cart.value = response.data;
+      cart.value = response.cart;
     } catch {
       cart.value = null;
     }
@@ -40,10 +40,7 @@ export const useCartStore = defineStore('cart', () => {
       return;
     }
     await CartService.clearCart();
-    cart.value = {
-      ...cart.value,
-      products: [],
-    };
+    cart.value.products = [];
   }
 
   async function checkoutCart() {
@@ -52,25 +49,35 @@ export const useCartStore = defineStore('cart', () => {
     }
     try {
       const order = await CartService.checkoutCart();
-      cart.value = null; // Clear the cart after successful checkout
+      cart.value.products = []; 
       return order;
     } catch (error) {
       console.error('Checkout failed:', error);
-      throw error; // Re-throw the error for further handling if needed
+      throw error;
     }
   }
 
-  async function addToCart(product: Product, quantity: number = 1) {
+  async function addToCart(product: Product, quantity?: number) {
     if (!cart.value) {
       await fetchCart();
     }
     if (!cart.value) {
       return;
     }
-    await CartService.addToCart(product.id, quantity);
+
     const existingProduct = cart.value.products.find(
       (item) => item.id === product.id,
     );
+
+    
+    if (!quantity && existingProduct) {
+      quantity = existingProduct.pivot.quantity + 1; // Default to 1 if no quantity is specified
+    } else if (!quantity) {
+      quantity = 1; // Default to 1 if no quantity is specified and product is not in cart 
+    }
+
+    await CartService.addToCart(product.id, quantity);
+    
     if (existingProduct) {
       existingProduct.pivot.quantity = quantity;
     } else {

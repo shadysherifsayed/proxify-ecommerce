@@ -21,6 +21,6 @@ class ProductController extends Controller
     {
         $products = $this->productService->listProducts($request);
 
-        return $products;
+        return response()->json(compact('products'));
     }
 }

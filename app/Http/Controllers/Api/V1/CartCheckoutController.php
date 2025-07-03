@@ -2,26 +2,20 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Jobs\CheckoutCart;
 use Illuminate\Http\Request;
-use App\Services\CartService;
 use App\Http\Controllers\Controller;
 
 class CartCheckoutController extends Controller
 {
 
     /**
-     * Create a new controller instance.
-     */
-    public function __construct(private CartService $cartService) {}
-
-    /**
      * Store a newly created resource in storage.
      */
     public function __invoke(Request $request)
     {
-        $order = $this->cartService->checkout($request->user());
+        CheckoutCart::dispatch($request->user()->cart()->with('products')->firstOrCreate());
 
-        return response()->json($order, 201);
+        return response()->noContent();
     }
-
 }

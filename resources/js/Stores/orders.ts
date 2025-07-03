@@ -30,7 +30,7 @@ export const useOrdersStore = defineStore('orders', () => {
     
     try {
       const response = await OrderService.fetchOrders();
-      orders.value = response.data;
+      orders.value = response.orders;
     } catch (err) {
       error.value = 'Failed to fetch orders';
       console.error('Error fetching orders:', err);
@@ -42,7 +42,7 @@ export const useOrdersStore = defineStore('orders', () => {
   async function fetchOrder(orderId: number): Promise<Order | null> {
     try {
       const response = await OrderService.fetchOrder(orderId);
-      return response.data;
+      return response.order;
     } catch (err) {
       error.value = 'Failed to fetch order';
       console.error('Error fetching order:', err);
@@ -50,18 +50,6 @@ export const useOrdersStore = defineStore('orders', () => {
     }
   }
 
-  async function createOrder(): Promise<Order | null> {
-    try {
-      const response = await OrderService.createOrder();
-      const newOrder = response.data;
-      orders.value.unshift(newOrder); // Add to beginning of array
-      return newOrder;
-    } catch (err) {
-      error.value = 'Failed to create order';
-      console.error('Error creating order:', err);
-      return null;
-    }
-  }
 
   async function updateOrderStatus(orderId: number, status: string): Promise<boolean> {
     try {
@@ -99,8 +87,7 @@ export const useOrdersStore = defineStore('orders', () => {
     // Actions
     fetchOrders,
     fetchOrder,
-    createOrder,
-    updateOrderStatus,
     clearError,
+    updateOrderStatus,
   };
 });

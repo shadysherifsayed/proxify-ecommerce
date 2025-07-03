@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
+            $table->integer('external_id')->unique();
             $table->string('title');
             $table->decimal('price', 10, 2);
             $table->text('description')->nullable();
             $table->string('image')->nullable();
             $table->float('rating')->default(0);
-            $table->integer('reviews')->default(0);
+            $table->integer('reviews_count')->default(0);
             $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
             $table->unique(['title', 'category_id']);
             $table->index('category_id');

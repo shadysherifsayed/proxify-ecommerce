@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Services\CartService;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\V1\Cart\AddProductRequest;
+use Symfony\Component\HttpFoundation\Response;
 
 class CartProductController extends Controller
 {
@@ -18,20 +20,15 @@ class CartProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, Product $product)
+    public function store(AddProductRequest $request, Product $product)
     {
-        $request->validate([
-            'quantity' => 'required|integer|min:1',
-        ]);
-
-        // Add product to cart
         $this->cartService->addProduct(
             $request->user(),
             $product,
             $request->input('quantity')
         );
 
-        return response()->json(['message' => 'Product added to cart successfully.'], 201);
+        return response()->json(compact('product'), Response::HTTP_CREATED);
     }
 
     /**
@@ -44,6 +41,6 @@ class CartProductController extends Controller
             $product,
         );
 
-        return response()->json(['message' => 'Product removed from cart successfully.'], 204);
+        return response()->noContent();
     }
 }

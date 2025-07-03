@@ -13,11 +13,37 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Create categories first
+        $categories = [
+            'Electronics',
+            'Clothing',
+            'Home & Garden',
+            'Sports & Outdoors',
+            'Books',
+            'Health & Beauty'
+        ];
 
-        User::factory()->create([
+        foreach ($categories as $categoryName) {
+            \App\Models\Category::firstOrCreate([
+                'name' => $categoryName
+            ]);
+        }
+
+        // Create products for each category
+        $categoryIds = \App\Models\Category::pluck('id')->toArray();
+        
+        foreach ($categoryIds as $categoryId) {
+            \App\Models\Product::factory(20)->create([
+                'category_id' => $categoryId
+            ]);
+        }
+
+        // Create a test user if it doesn't exist
+        User::firstOrCreate([
+            'email' => 'test@example.com'
+        ], [
             'name' => 'Test User',
-            'email' => 'test@example.com',
+            'password' => bcrypt('password'),
         ]);
     }
 }

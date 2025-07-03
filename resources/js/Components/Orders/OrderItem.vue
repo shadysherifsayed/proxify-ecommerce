@@ -33,7 +33,7 @@
         </div>
         
         <div class="text-h6 font-weight-bold text-primary">
-          ${{ order.total_price.toFixed(2) }}
+          ${{ order.total_price?.toFixed(2) ?? 0 }}
         </div>
       </div>
 
@@ -45,13 +45,13 @@
           class="d-flex align-center py-2"
           :class="{ 'border-top': index > 0 }"
         >
-          <v-img
+          <!-- <v-img
             :src="product.image"
             height="40"
             width="40"
             cover
             class="rounded mr-3 flex-shrink-0"
-          />
+          /> -->
           
           <div class="flex-grow-1 min-width-0">
             <div class="text-body-2 font-weight-medium text-truncate">

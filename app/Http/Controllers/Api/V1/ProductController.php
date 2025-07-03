@@ -50,11 +50,8 @@ class ProductController extends Controller
             'image' => 'required|image|mimes:jpeg,jpg,png,webp|max:5120', // 5MB max
         ]);
 
-        $product = $this->productService->updateProductImage($product, $request->file('image'));
+        $url = $this->productService->updateProductImage($product, $request->file('image'));
 
-        return response()->json([
-            'product' => $product,
-            'message' => 'Product image updated successfully'
-        ]);
+        return response()->json(compact('url'));
     }
 }

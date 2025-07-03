@@ -33,15 +33,14 @@ class ProductService
     /**
      * Update product image
      */
-    public function updateProductImage(Product $product, UploadedFile $image): Product
+    public function updateProductImage(Product $product, UploadedFile $image): string
     {
-
         // Store the new image
         $imagePath = $image->store('products', 'public');
 
         // Update the product with new image URL
         $product->update(['image' => $imagePath]);
 
-        return $product->load('category');
+        return $product->image;
     }
 }

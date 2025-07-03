@@ -1,13 +1,21 @@
 <template>
   <v-card class="d-flex flex-row align-center pa-3 mb-3" elevation="2">
-    <v-img 
-      height="80" 
-      width="80" 
-      :src="product.image" 
+    <v-img
+      height="80"
+      width="80"
+      :src="product.image"
       cover
       class="flex-shrink-0 rounded"
-    />
-    
+    >
+      <template #error>
+        <div
+          class="d-flex align-center justify-center fill-height bg-grey-lighten-3"
+        >
+          <v-icon icon="mdi-image-broken" color="grey" size="64" />
+        </div>
+      </template>
+    </v-img>
+
     <div class="d-flex flex-column flex-grow-1 ml-4">
       <div class="d-flex justify-space-between align-start">
         <div class="flex-grow-1 pr-2">
@@ -18,7 +26,7 @@
             Price: ${{ product.price }}
           </div>
         </div>
-        
+
         <v-btn
           icon="mdi-delete"
           size="small"
@@ -27,7 +35,7 @@
           @click="emit('remove')"
         />
       </div>
-      
+
       <div class="d-flex justify-space-between align-center">
         <div class="d-flex align-center">
           <v-btn
@@ -47,7 +55,7 @@
             @click="emit('increase')"
           />
         </div>
-        
+
         <div class="text-h6 font-weight-bold text-primary">
           ${{ (product.price * product.pivot.quantity).toFixed(2) }}
         </div>
@@ -69,4 +77,3 @@ const emit = defineEmits<{
   (e: 'decrease'): void;
 }>();
 </script>
-

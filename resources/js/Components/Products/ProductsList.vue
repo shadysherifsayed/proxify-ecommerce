@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import ProductItem from '@/Components/Products/ProductItem.vue';
 import SpinnerLoader from '@/Components/General/SpinnerLoader.vue';
+import ProductItem from '@/Components/Products/ProductItem.vue';
 import { Product } from '@/Types/entities';
 
 defineProps<{

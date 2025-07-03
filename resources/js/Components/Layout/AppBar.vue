@@ -32,9 +32,10 @@ const cartDrawer = defineModel<boolean>('cartDrawer', { default: false });
       <v-btn class="text-none me-2" height="48" icon slim>
         <v-avatar
           color="surface-light"
-          image="https://cdn.vuetifyjs.com/images/john.png"
           size="32"
-        />
+        >
+          <v-icon icon="mdi-account-circle"></v-icon>
+        </v-avatar>
 
         <v-menu activator="parent">
           <v-list density="compact" nav>

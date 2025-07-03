@@ -19,7 +19,15 @@ const emit = defineEmits<{
     class="d-flex flex-column"
     height="100%"
   >
-    <v-img height="300" :src="product.image" cover />
+    <v-img height="300" :src="product.image" cover>
+      <template #error>
+        <div
+          class="d-flex align-center justify-center fill-height bg-grey-lighten-3"
+        >
+          <v-icon icon="mdi-image-broken" color="grey" size="64" />
+        </div>
+      </template>
+    </v-img>
 
     <v-chip rounded="sm">
       <v-icon icon="mdi-tag" size="small" class="me-1"></v-icon>

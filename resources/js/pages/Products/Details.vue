@@ -27,7 +27,7 @@
             color="success"
             prepend-icon="mdi-check"
             @click="saveChanges"
-            :loading="saving"
+            :isLoading="isSaving"
             variant="elevated"
           >
             Save Changes
@@ -43,14 +43,8 @@
         </div>
       </div>
 
-      <!-- Loading State -->
-      <div v-if="loading" class="text-center py-12">
-        <v-progress-circular color="primary" indeterminate size="64" />
-        <p class="text-h6 mt-4">Loading product...</p>
-      </div>
-
-      <!-- Error State -->
-      <v-alert v-else-if="error" type="error" class="mb-4" :text="error" />
+      <!-- isLoading State -->
+      <SpinnerLoader v-if="isLoading" text="Loading product details..." />
 
       <!-- Product Details -->
       <div v-else-if="product">
@@ -66,7 +60,7 @@
                   cover
                   class="product-image mb-4"
                 >
-                  <template v-slot:placeholder>
+                  <template #placeholder>
                     <div class="d-flex align-center justify-center fill-height">
                       <v-progress-circular
                         color="grey-lighten-4"
@@ -74,7 +68,7 @@
                       />
                     </div>
                   </template>
-                  <template v-slot:error>
+                  <template #error>
                     <div
                       class="d-flex align-center justify-center fill-height bg-grey-lighten-3"
                     >
@@ -85,58 +79,22 @@
 
                 <!-- Edit Image Input -->
                 <div v-if="editMode">
-                  <v-tabs v-model="imageInputTab" color="primary" class="mb-4">
-                    <v-tab value="url">Image URL</v-tab>
-                    <v-tab value="upload">Upload Image</v-tab>
-                  </v-tabs>
-
-                  <v-window v-model="imageInputTab">
-                    <v-window-item value="url">
-                      <v-text-field
-                        v-model="editForm.image"
-                        label="Image URL"
-                        prepend-inner-icon="mdi-link"
-                        variant="outlined"
-                        density="comfortable"
-                        :error-messages="validationErrors.image"
-                        placeholder="https://example.com/image.jpg"
-                      />
-                    </v-window-item>
-
-                    <v-window-item value="upload">
-                      <v-file-input
-                        v-model="selectedImageFile"
-                        label="Upload Image"
-                        prepend-inner-icon="mdi-camera"
-                        variant="outlined"
-                        density="comfortable"
-                        accept="image/*"
-                        :error-messages="validationErrors.image"
-                        @change="handleImageUpload"
-                      />
-
-                      <v-progress-linear
-                        v-if="uploadingImage"
-                        color="primary"
-                        indeterminate
-                        class="mt-2"
-                      />
-
-                      <div
-                        v-if="
-                          selectedImageFile &&
-                          selectedImageFile.length > 0 &&
-                          !uploadingImage
-                        "
-                        class="mt-2"
-                      >
-                        <v-chip color="success" size="small">
-                          <v-icon start icon="mdi-check" />
-                          Image ready for upload
-                        </v-chip>
-                      </div>
-                    </v-window-item>
-                  </v-window>
+                  <v-file-input
+                    v-model="selectedImageFile"
+                    label="Upload Image"
+                    prepend-inner-icon="mdi-camera"
+                    variant="outlined"
+                    density="comfortable"
+                    accept="image/*"
+                    :error-messages="validationErrors.image"
+                    @change="handleImageUpload"
+                  />
+                  <v-progress-linear
+                    v-if="isUploadingImage"
+                    color="primary"
+                    indeterminate
+                    class="mt-2"
+                  />
                 </div>
               </div>
             </v-card>
@@ -218,7 +176,6 @@
                     prepend-inner-icon="mdi-tag"
                     :error-messages="validationErrors.category_id"
                     placeholder="Select a category"
-                    :loading="loadingCategories"
                   />
                 </div>
 
@@ -290,30 +247,31 @@
 </template>
 
 <script lang="ts" setup>
+import SpinnerLoader from '@/Components/General/SpinnerLoader.vue';
 import MainLayout from '@/Layouts/MainLayout.vue';
-import CategoryService from '@/Services/CategoryService';
-import FileUploadService from '@/Services/FileUploadService';
 import ProductService from '@/Services/ProductService';
-import { Category, Product } from '@/Types/entities';
+import { useCategoriesStore } from '@/Stores/categories';
+import { Product } from '@/Types/entities';
+import { storeToRefs } from 'pinia';
 import { computed, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
 
 const product = ref<Product | null>(null);
-const categories = ref<Category[]>([]);
-const loading = ref(false);
-const loadingCategories = ref(false);
+const isLoading = ref(false);
 const error = ref('');
 const editMode = ref(false);
-const saving = ref(false);
+const isSaving = ref(false);
 const successMessage = ref('');
 const validationErrors = ref<Record<string, string[]>>({});
 
+const categoriesStore = useCategoriesStore();
+const { categories } = storeToRefs(categoriesStore);
+
 // Image handling
-const imageInputTab = ref('url');
-const selectedImageFile = ref<File[]>([]);
-const uploadingImage = ref(false);
+const selectedImageFile = ref<File | null>(null);
+const isUploadingImage = ref(false);
 
 const editForm = ref({
   title: '',
@@ -323,42 +281,25 @@ const editForm = ref({
   category_id: 0,
 });
 
-const productId = computed(() => route.params.id as string);
+const productId = computed(() => route.params.id as unknown as number);
 
 async function fetchProduct() {
-  loading.value = true;
+  isLoading.value = true;
   error.value = '';
 
   try {
-    const response = await ProductService.fetchProduct(
-      parseInt(productId.value),
-    );
+    const response = await ProductService.fetchProduct(productId.value);
     product.value = response.product;
   } catch (err: any) {
     error.value = err.response?.data?.message || 'Failed to load product';
     console.error('Error fetching product:', err);
   } finally {
-    loading.value = false;
-  }
-}
-
-async function fetchCategories() {
-  loadingCategories.value = true;
-
-  try {
-    const response = await CategoryService.fetchCategories();
-    categories.value = response.categories;
-  } catch (err: any) {
-    console.error('Error fetching categories:', err);
-    // Don't show error to user as this is not critical
-  } finally {
-    loadingCategories.value = false;
+    isLoading.value = false;
   }
 }
 
 function startEdit() {
   if (!product.value) return;
-
   editMode.value = true;
   editForm.value = {
     title: product.value.title,
@@ -368,17 +309,13 @@ function startEdit() {
     category_id: product.value.category.id,
   };
   validationErrors.value = {};
-
-  // Fetch categories when entering edit mode
-  fetchCategories();
 }
 
 function cancelEdit() {
   editMode.value = false;
   validationErrors.value = {};
-  selectedImageFile.value = [];
-  uploadingImage.value = false;
-  imageInputTab.value = 'url';
+  selectedImageFile.value = null;
+  isUploadingImage.value = false;
   editForm.value = {
     title: '',
     description: '',
@@ -390,10 +327,8 @@ function cancelEdit() {
 
 async function saveChanges() {
   if (!product.value) return;
-
-  saving.value = true;
+  isSaving.value = true;
   validationErrors.value = {};
-
   try {
     const updatedProduct = await ProductService.updateProduct(
       product.value.id,
@@ -413,35 +348,28 @@ async function saveChanges() {
     } else {
       error.value = err.response?.data?.message || 'Failed to update product';
     }
-    console.error('Error updating product:', err);
   } finally {
-    saving.value = false;
+    isSaving.value = false;
   }
 }
 
 async function handleImageUpload() {
-  if (selectedImageFile.value.length === 0) return;
+  if (!selectedImageFile.value || !productId.value) return;
 
   const file = selectedImageFile.value;
 
-  // Validate file
-  const validation = FileUploadService.validateImageFile(file);
-  if (!validation.isValid) {
-    validationErrors.value.image = [validation.error || 'Invalid file'];
-    return;
-  }
-
-  uploadingImage.value = true;
-  validationErrors.value.image = [];
+  isUploadingImage.value = true;
 
   try {
-    const result = await FileUploadService.uploadImage(productId.value, file);
-    editForm.value.image = result.url;
-  } catch (err) {
-    console.error('Error uploading image:', err);
+    const response = await ProductService.uploadProductImage(
+      productId.value,
+      file,
+    );
+    editForm.value.image = response.url;
+  } catch {
     validationErrors.value.image = ['Failed to upload image'];
   } finally {
-    uploadingImage.value = false;
+    isUploadingImage.value = false;
   }
 }
 

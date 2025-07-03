@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\V1\Auth\LoginController;
 use App\Http\Controllers\Api\V1\Auth\LogoutController;
 use App\Http\Controllers\Api\V1\Auth\RegisterController;
 use App\Http\Controllers\Api\V1\CartCheckoutController;
+use App\Http\Controllers\Api\V1\OrderController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\CartController;
 use App\Http\Controllers\Api\V1\CartProductController;
@@ -19,8 +20,9 @@ Route::middleware('api', 'auth:sanctum')
         Route::delete('carts/products/{product}', [CartProductController::class, 'destroy'])->name('carts.products.destroy');
         Route::post('carts/checkout', CartCheckoutController::class)->name('carts.checkout');
         
+        Route::apiResource('orders', OrderController::class)->only(['index', 'store', 'show', 'update', 'destroy']);
+        
         Route::post('logout', LogoutController::class);
-        // Route::apiResource('orders', OrderController::class)->only(['index', 'store', 'show', 'update', 'destroy']);
     });
 
 Route::middleware('api', 'guest')

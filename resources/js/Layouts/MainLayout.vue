@@ -90,11 +90,13 @@ const items = ref([
   {
     title: 'Products',
     prependIcon: 'mdi-view-dashboard-outline',
+    to: '/',
     link: true,
   },
   {
     title: 'Orders',
-    prependIcon: 'mdi-account-group',
+    prependIcon: 'mdi-package-variant',
+    to: '/orders',
     link: true,
   },
 ]);

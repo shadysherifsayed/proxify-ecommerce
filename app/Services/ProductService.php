@@ -3,20 +3,19 @@
 namespace App\Services;
 
 use App\Models\Product;
-use Illuminate\Http\Request;
 use Illuminate\Contracts\Pagination\CursorPaginator;
 
 class ProductService
 {
 
-    public function listProducts(Request $request): CursorPaginator
+    public function listProducts(): CursorPaginator
     {
         $query = Product::with('category');
 
         return $query->cursorPaginate();
     }
 
-    public function showProduct(Product $product): Product
+    public function getProduct(Product $product): Product
     {
         return $product->load('category');
     }

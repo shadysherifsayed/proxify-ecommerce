@@ -4,6 +4,7 @@ import { User } from '@/Types/entities';
 import { LoginRequest, RegisterRequest } from '@/Types/requests';
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
+import { useCartStore } from './cart';
 
 export const useAuthStore = defineStore(
   'auth',
@@ -13,10 +14,13 @@ export const useAuthStore = defineStore(
 
     const isAuthenticated = computed(() => !!user.value);
 
+    const cartStore = useCartStore()
+
     async function login(data: LoginRequest) {
       const response = await AuthService.login(data);
       user.value = response.user;
       setTokenAndNavigate(response.token ?? '');
+      cartStore.fetchCart(); // Assuming you have a cart store to fetch the cart after login
     }
 
     async function logout() {
@@ -33,6 +37,7 @@ export const useAuthStore = defineStore(
       const response = await AuthService.register(data);
       user.value = response.user;
       setTokenAndNavigate(response.token ?? '');
+      cartStore.fetchCart(); // Assuming you have a cart store to fetch the cart after registration
     }
 
     function setTokenAndNavigate(t: string) {
@@ -41,11 +46,15 @@ export const useAuthStore = defineStore(
     }
 
     async function fetchUser() {
+      if (isAuthenticated.value) {
+        return;
+      }
       try {
         const response = await AuthService.user();
         user.value = response.user;
-      } catch (error) {
-        console.error('Fetch user failed:', error);
+      } catch {
+        user.value = null; // If fetching user fails, set user to null
+        token.value = null; // Clear token if fetching user fails
       }
     }
 
@@ -58,9 +67,4 @@ export const useAuthStore = defineStore(
       fetchUser,
     };
   },
-  // {
-  //     persist: {
-  //         pick: ['token'],
-  //     },
-  // },
 );

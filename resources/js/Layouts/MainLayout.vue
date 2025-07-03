@@ -13,11 +13,7 @@
 <script setup lang="ts">
 import CartDrawer from '@/Components/Cart/CartDrawer.vue';
 import AppBar from '@/Components/Layout/AppBar.vue';
-import { useCartStore } from '@/Stores/cart';
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 
-const cartStore = useCartStore();
 const cartDrawer = ref(false);
-
-onMounted(() => cartStore.fetchCart());
 </script>

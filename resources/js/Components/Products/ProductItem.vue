@@ -2,7 +2,6 @@
 import { Product } from '@/Types/entities';
 
 defineProps<{
-  loading?: boolean;
   product: Product;
 }>();
 
@@ -13,12 +12,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <v-card
-    :disabled="loading"
-    :loading="loading"
-    class="d-flex flex-column"
-    height="100%"
-  >
+  <v-card class="d-flex flex-column" height="100%">
     <v-img height="300" :src="product.image" cover>
       <template #error>
         <div
@@ -29,7 +23,7 @@ const emit = defineEmits<{
       </template>
     </v-img>
 
-    <v-chip rounded="sm">
+    <v-chip rounded="sm" class="text-uppercase">
       <v-icon icon="mdi-tag" size="small" class="me-1"></v-icon>
       {{ product.category.name }}
     </v-chip>

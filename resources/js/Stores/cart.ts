@@ -28,6 +28,9 @@ export const useCartStore = defineStore('cart', () => {
 
   async function fetchCart() {
     try {
+      if (cart.value) {
+        return; // If cart is already fetched, no need to fetch again
+      }
       const response = await CartService.fetchCart();
       cart.value = response.cart;
     } catch {

@@ -1,3 +1,17 @@
+<script setup lang="ts">
+import { CartProduct } from '@/Types/entities';
+
+defineProps<{
+  product: CartProduct;
+}>();
+
+const emit = defineEmits<{
+  (e: 'remove'): void;
+  (e: 'increase'): void;
+  (e: 'decrease'): void;
+}>();
+</script>
+
 <template>
   <v-card class="d-flex flex-row align-center pa-3 mb-3" elevation="2">
     <v-img
@@ -63,17 +77,3 @@
     </div>
   </v-card>
 </template>
-
-<script setup lang="ts">
-import { CartProduct } from '@/Types/entities';
-
-defineProps<{
-  product: CartProduct;
-}>();
-
-const emit = defineEmits<{
-  (e: 'remove'): void;
-  (e: 'increase'): void;
-  (e: 'decrease'): void;
-}>();
-</script>

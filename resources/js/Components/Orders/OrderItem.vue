@@ -185,39 +185,3 @@ function formatDate(dateString: string): string {
     </v-card-actions>
   </v-card>
 </template>
-
-<style scoped>
-.min-width-0 {
-  min-width: 0;
-}
-
-.text-truncate {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.border-top {
-  border-top: 1px solid rgba(var(--v-border-color), 0.12);
-}
-
-.border-l-warning {
-  border-left: 4px solid rgb(var(--v-theme-warning));
-}
-
-.border-l-info {
-  border-left: 4px solid rgb(var(--v-theme-info));
-}
-
-.border-l-success {
-  border-left: 4px solid rgb(var(--v-theme-success));
-}
-
-.border-l-error {
-  border-left: 4px solid rgb(var(--v-theme-error));
-}
-
-.border-l-grey {
-  border-left: 4px solid rgb(var(--v-theme-surface-variant));
-}
-</style>

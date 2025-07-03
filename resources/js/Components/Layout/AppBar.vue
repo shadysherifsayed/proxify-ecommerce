@@ -1,12 +1,16 @@
 <script lang="ts" setup>
 import { useAuthStore } from '@/Stores/auth';
 import { useCartStore } from '@/Stores/cart';
+import { useSystemStore } from '@/Stores/system';
 import { storeToRefs } from 'pinia';
 
 const authStore = useAuthStore();
 
 const cartStore = useCartStore();
 const { cartCount } = storeToRefs(cartStore);
+
+const systemStore = useSystemStore();
+const { isDarkMode } = storeToRefs(systemStore);
 
 const cartDrawer = defineModel<boolean>('cartDrawer', { default: false });
 </script>
@@ -29,39 +33,39 @@ const cartDrawer = defineModel<boolean>('cartDrawer', { default: false });
     />
     <v-spacer />
     <template #append>
-      <v-btn class="text-none me-2" height="48" icon slim>
-        <v-avatar
-          color="surface-light"
-          size="32"
-        >
-          <v-icon icon="mdi-account-circle"></v-icon>
-        </v-avatar>
-
-        <v-menu activator="parent">
-          <v-list density="compact" nav>
-            <v-list-item append-icon="mdi-cog-outline" link title="Settings" />
-
-            <v-list-item
-              append-icon="mdi-logout"
-              link
-              title="Logout"
-              @click="authStore.logout"
-            />
-          </v-list>
-        </v-menu>
-      </v-btn>
       <v-btn
         class="text-none me-2"
         height="48"
         icon
         rounded
-        color="primary"
+        :color="cartCount > 0 ? 'primary' : 'grey-darken-2'"
         @click="cartDrawer = true"
       >
-        <v-badge color="primary" variant="tonal" :content="cartCount" overlap>
+        <v-badge
+          :color="cartCount > 0 ? 'primary' : 'grey-lighten-2'"
+          variant="tonal"
+          :content="cartCount"
+          overlap
+        >
           <v-icon>mdi-cart</v-icon>
         </v-badge>
       </v-btn>
+
+      <v-btn
+        height="48"
+        color="grey-darken-2"
+        @click="isDarkMode = !isDarkMode"
+        :icon="!isDarkMode ? 'mdi-moon-waning-crescent' : 'mdi-weather-sunny'"
+      />
+
+      <v-btn
+        class="text-none me-2"
+        height="48"
+        icon="mdi-logout"
+        rounded
+        color="grey-darken-2"
+        @click="authStore.logout"
+      />
     </template>
   </v-app-bar>
 </template>

@@ -12,6 +12,9 @@ export const useCategoriesStore = defineStore('categories', () => {
     isLoading.value = true;
 
     try {
+      if (categories.value.length > 0) {
+        return; // If categories are already fetched, no need to fetch again
+      }
       const response = await CategoryService.fetchCategories();
       categories.value = response.categories;
     } finally {

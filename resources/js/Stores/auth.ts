@@ -16,10 +16,8 @@ export const useAuthStore = defineStore(
         async function login(data: LoginRequest) {
             try {
                 const response = await AuthService.login(data);
-                console.log('Login response:', response);
-                user.value = response.data;
-                console.log('User logged in:', user.value);
-                setTokenAndNavigate(user.value.token ?? '');
+                user.value = response.user;
+                setTokenAndNavigate(response.token ?? '');
             } catch (error) {
                 console.error('Login failed:', error);
             }
@@ -39,16 +37,14 @@ export const useAuthStore = defineStore(
         async function register(data: RegisterRequest) {
              try {
                 const response = await AuthService.register(data);
-                user.value = response.data;
-                setTokenAndNavigate(user.value.token ?? '');
+                user.value = response.user;
+                setTokenAndNavigate(response.token ?? '');
             } catch (error) {
                 console.error('Login failed:', error);
             }
         }
 
         function setTokenAndNavigate(t: string) {
-            console.log('Setting token:', t);
-            // token.value = t;
             AuthService.setToken(t);
             router.push('/');
         }
@@ -56,7 +52,7 @@ export const useAuthStore = defineStore(
         async function fetchUser() {
             try {
                 const response = await AuthService.user();
-                user.value = response.data;
+                user.value = response.user;
             } catch (error) {
                 console.error('Fetch user failed:', error);
             }

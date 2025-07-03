@@ -1,23 +1,25 @@
-import { defineStore } from 'pinia';
-import { ref, computed } from 'vue';
-import { Order } from '@/Types/entities';
 import OrderService from '@/Services/OrderService';
+import { Order } from '@/Types/entities';
+import { defineStore } from 'pinia';
+import { computed, ref } from 'vue';
 
 export const useOrdersStore = defineStore('orders', () => {
   const orders = ref<Order[]>([]);
-  const loading = ref(false);
-  const error = ref<string | null>(null);
+  const isLoading = ref(false);
 
   const ordersCount = computed(() => orders.value.length);
 
   const ordersByStatus = computed(() => {
-    return orders.value.reduce((acc, order) => {
-      if (!acc[order.status]) {
-        acc[order.status] = [];
-      }
-      acc[order.status].push(order);
-      return acc;
-    }, {} as Record<string, Order[]>);
+    return orders.value.reduce(
+      (acc, order) => {
+        if (!acc[order.status]) {
+          acc[order.status] = [];
+        }
+        acc[order.status].push(order);
+        return acc;
+      },
+      {} as Record<string, Order[]>,
+    );
   });
 
   const totalSpent = computed(() => {
@@ -25,17 +27,15 @@ export const useOrdersStore = defineStore('orders', () => {
   });
 
   async function fetchOrders() {
-    loading.value = true;
-    error.value = null;
-    
+    isLoading.value = true;
+
     try {
       const response = await OrderService.fetchOrders();
       orders.value = response.orders;
     } catch (err) {
-      error.value = 'Failed to fetch orders';
       console.error('Error fetching orders:', err);
     } finally {
-      loading.value = false;
+      isLoading.value = false;
     }
   }
 
@@ -44,50 +44,40 @@ export const useOrdersStore = defineStore('orders', () => {
       const response = await OrderService.fetchOrder(orderId);
       return response.order;
     } catch (err) {
-      error.value = 'Failed to fetch order';
       console.error('Error fetching order:', err);
       return null;
     }
   }
 
-
-  async function updateOrderStatus(orderId: number, status: string): Promise<boolean> {
+  async function updateOrder(
+    orderId: number,
+    data: Partial<Order>,
+  ): Promise<boolean> {
     try {
-      const response = await OrderService.updateOrderStatus(orderId, status);
-      const updatedOrder = response.data;
-      
-      const index = orders.value.findIndex(order => order.id === orderId);
+      await OrderService.updateOrder(orderId, data);
+      const index = orders.value.findIndex((order) => order.id === orderId);
       if (index !== -1) {
-        orders.value[index] = updatedOrder;
+        orders.value[index] = { ...orders.value[index], ...data };
       }
-      
       return true;
-    } catch (err) {
-      error.value = 'Failed to update order status';
-      console.error('Error updating order status:', err);
+    } catch {
       return false;
     }
-  }
-
-  function clearError() {
-    error.value = null;
   }
 
   return {
     // State
     orders,
-    loading,
-    error,
-    
+    isLoading,
+
     // Getters
     ordersCount,
     ordersByStatus,
     totalSpent,
-    
+
     // Actions
     fetchOrders,
     fetchOrder,
-    clearError,
-    updateOrderStatus,
+    updateOrder,
   };
 });

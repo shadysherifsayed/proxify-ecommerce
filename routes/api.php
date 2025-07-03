@@ -13,7 +13,7 @@ use App\Http\Controllers\Api\V1\CategoryController;
 
 
 // Protected routes (authentication required)
-Route::middleware('api', 'auth:sanctum')
+Route::middleware(['api', 'auth:sanctum'])
     ->group(function () {
         Route::apiResource('categories', CategoryController::class)->only('index');
         Route::apiResource('products', ProductController::class)->only('index');
@@ -29,7 +29,7 @@ Route::middleware('api', 'auth:sanctum')
     });
 
 // Public routes (no authentication required)
-Route::middleware('api', 'guest')
+Route::middleware(['api', 'guest'])
     ->group(function () {
         Route::post('login', LoginController::class);
         Route::post('register', RegisterController::class);

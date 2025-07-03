@@ -1,24 +1,32 @@
-<template>
-  <MainLayout>
-    <v-container fluid>
-      <ProductsList :filtered-products="products" :loading="productsLoading" />
-    </v-container>
-  </MainLayout>
-</template>
-
 <script setup lang="ts">
 import ProductsList from '@/Components/Products/ProductsList.vue';
 import MainLayout from '@/Layouts/MainLayout.vue';
+import router from '@/Router';
+import { useCartStore } from '@/Stores/cart';
 import { useProductsStore } from '@/Stores/products';
+import { Product } from '@/Types/entities';
 import { storeToRefs } from 'pinia';
-import { computed, onMounted } from 'vue';
+import { onMounted } from 'vue';
 
 const productsStore = useProductsStore();
-const { products } = storeToRefs(productsStore);
+const { products, isLoading } = storeToRefs(productsStore);
 
-const productsLoading = computed(() => products.value.length === 0);
+const cartStore = useCartStore();
 
-onMounted(() => {
-  productsStore.fetchProducts();
-});
+onMounted(() => productsStore.fetchProducts());
 </script>
+
+<template>
+  <MainLayout>
+    <ProductsList
+      class="mt-8"
+      :products="products"
+      :is-loading="isLoading"
+      @view-product="
+        (product: Product) =>
+          router.push({ name: 'products.show', params: { id: product.id } })
+      "
+      @add-to-cart="(product: Product) => cartStore.addToCart(product)"
+    />
+  </MainLayout>
+</template>

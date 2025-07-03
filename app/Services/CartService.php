@@ -3,9 +3,8 @@
 namespace App\Services;
 
 use App\Models\Cart;
-use App\Models\Order;
-use App\Models\Product;
 use App\Models\User;
+use App\Models\Product;
 
 class CartService
 {
@@ -48,7 +47,7 @@ class CartService
      * @param \App\Models\Product $product The product to remove from the cart
      * @return void
      */
-    public function removeProduct(User $user, Product $product)
+    public function removeProduct(User $user, Product $product): void
     {
         $cart = $user->cart()->firstOrCreate();
 
@@ -59,50 +58,12 @@ class CartService
      * Clear the cart.
      *
      * @param \App\Models\User $user The user whose cart to clear
-     * @return \App\Models\Cart The cleared cart
+     * @return void
      */
-    public function clearCart(User $user)
+    public function clearCart(User $user): void
     {
         $cart = $user->cart()->firstOrCreate();
 
         $cart->products()->detach();
-
-        return $cart;
-    }
-
-    /**
-     * Checkout the cart.
-     *
-     * @param \App\Models\User $user The user whose cart to checkout
-     * @return \App\Models\Order The created order
-     */
-    public function checkout(User $user): Order
-    {
-        $cart = $user->cart()->firstOrCreate();
-
-        if ($cart->products->isEmpty()) {
-            throw new \Exception('Cart is empty.');
-        }
-
-        // Create an order from the cart
-        $order = Order::create([
-            'user_id' => $user->id,
-            'total'   => $cart->products->sum(function ($product) {
-                return $product->pivot->quantity * $product->price;
-            }),
-        ]);
-
-        // Attach products to the order
-        foreach ($cart->products as $product) {
-            $order->products()->attach($product->id, [
-                'quantity' => $product->pivot->quantity,
-                'price'    => $product->price,
-            ]);
-        }
-
-        // Clear the cart after checkout
-        $this->clearCart($user);
-
-        return $order;
     }
 }

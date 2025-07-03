@@ -1,46 +1,41 @@
+<script setup lang="ts">
+import { Product } from '@/Types/entities';
+
+defineProps<{
+  loading?: boolean;
+  product: Product;
+}>();
+
+const emit = defineEmits<{
+  (e: 'add'): void;
+  (e: 'edit'): void;
+}>();
+</script>
+
 <template>
   <v-card
     :disabled="loading"
     :loading="loading"
     class="d-flex flex-column"
+    height="100%"
   >
-    <template v-slot:loader="{ isActive }">
-      <v-progress-linear
-        :active="isActive"
-        color="deep-purple"
-        height="4"
-        indeterminate
-      />
-    </template>
-
     <v-img height="300" :src="product.image" cover />
 
+    <v-chip rounded="sm">
+      <v-icon icon="mdi-tag" size="small" class="me-1"></v-icon>
+      {{ product.category.name }}
+    </v-chip>
+
     <v-card-title
-      class="text-pre-wrap mb-4"
-      style="
-        min-height: 80px;
-        max-height: 80px;
-        overflow: hidden;
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-        line-clamp: 3;
-      "
+      class="text-pre-wrap mb-4 line-clamp-2"
+      style="min-height: 80px; max-height: 80px"
     >
       {{ product.title }}
     </v-card-title>
 
     <v-card-subtitle
-      class="text-subtitle-2 text-grey text-pre-wrap"
-      style="
-        min-height: 80px;
-        max-height: 80px;
-        overflow: hidden;
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-        line-clamp: 3;
-      "
+      class="text-subtitle-2 text-grey text-pre-wrap line-clamp-3"
+      style="min-height: 80px; max-height: 80px"
     >
       {{ product.description }}
     </v-card-subtitle>
@@ -67,21 +62,23 @@
 
     <v-divider class="mx-4 mb-1"></v-divider>
 
-    <v-card-actions class="mt-auto">
-      <v-btn text="Add to Cart" block @click="emit('add')"></v-btn>
+    <v-card-actions class="mt-auto flex-column">
+      <v-btn
+        prepend-icon="mdi-cart"
+        text="Add to Cart"
+        block
+        variant="outlined"
+        @click="emit('add')"
+      />
+
+      <v-btn
+        prepend-icon="mdi-pencil"
+        text="Edit Product"
+        block
+        @click="emit('edit')"
+        variant="text"
+        color="warning"
+      />
     </v-card-actions>
   </v-card>
 </template>
-
-<script setup lang="ts">
-import { Product } from '@/Types/entities';
-
-defineProps<{
-  loading?: boolean;
-  product: Product;
-}>();
-
-const emit = defineEmits<{
-  (e: 'add'): void;
-}>();
-</script>

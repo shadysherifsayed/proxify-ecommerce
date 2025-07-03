@@ -6,16 +6,33 @@ export class BaseService {
     this.client = axios.create({
       baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000',
     });
+
+    // Add interceptor for validation errors
+    this.client.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error.response && error.response.status === 422) {
+          // Attach validation errors to the error object
+          error.validationErrors = error.response.data.errors || {};
+        }
+        return Promise.reject(error);
+      },
+    );
   }
 
-  async send(method: string, endpoint: string, data?: any): Promise<any> {
-    const headers: Record<string, string> = {
+  async send(
+    method: string,
+    endpoint: string,
+    data?: any,
+    headers?: Record<string, string>,
+  ): Promise<any> {
+    headers = headers || {
       'Content-Type': 'application/json',
       accept: 'application/json',
     };
 
-    // Only add authorization header if we have a token
     const token = this.getToken();
+    
     if (token) {
       headers.Authorization = `Bearer ${token}`;
     }
@@ -30,7 +47,7 @@ export class BaseService {
     if (response.status >= 200 && response.status < 300) {
       return response.data;
     } else {
-      return response
+      return response;
     }
   }
 

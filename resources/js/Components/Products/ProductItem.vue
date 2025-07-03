@@ -8,7 +8,7 @@ defineProps<{
 
 const emit = defineEmits<{
   (e: 'add'): void;
-  (e: 'edit'): void;
+  (e: 'view'): void;
 }>();
 </script>
 
@@ -72,10 +72,10 @@ const emit = defineEmits<{
       />
 
       <v-btn
-        prepend-icon="mdi-pencil"
-        text="Edit Product"
+        prepend-icon="mdi-eye"
+        text="View Details"
         block
-        @click="emit('edit')"
+        @click="emit('view')"
         variant="text"
         color="warning"
       />

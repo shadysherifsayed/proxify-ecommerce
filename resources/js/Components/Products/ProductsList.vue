@@ -10,7 +10,7 @@ defineProps<{
 
 const emit = defineEmits<{
   (e: 'add-to-cart', product: Product): void;
-  (e: 'edit-product', product: Product): void;
+  (e: 'view-product', product: Product): void;
 }>();
 </script>
 
@@ -28,7 +28,7 @@ const emit = defineEmits<{
         <ProductItem
           :product="product"
           @add="emit('add-to-cart', product)"
-          @edit="emit('edit-product', product)"
+          @view="emit('view-product', product)"
         />
       </v-col>
     </v-row>

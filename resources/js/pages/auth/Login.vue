@@ -2,23 +2,28 @@
   <AuthLayout>
     <v-card-title class="text-h5 text-center">Login</v-card-title>
     <v-card-text>
-      <v-form @submit="authStore.login(form)">
-        <v-label>
-            Email
-        </v-label>
+      <v-alert
+        v-if="errorMessage"
+        type="error"
+        class="mb-4"
+        :text="errorMessage"
+      />
+
+      <v-form>
+        <v-label> Email </v-label>
         <v-text-field
           type="email"
           required
           v-model="form.email"
+          :error-messages="validationErrors.email"
         />
 
-        <v-label>
-            Password
-        </v-label>
+        <v-label> Password </v-label>
         <v-text-field
           type="password"
           required
           v-model="form.password"
+          :error-messages="validationErrors.password"
         />
         <v-btn
           color="primary"
@@ -56,11 +61,24 @@ const form = ref<LoginRequest>({
 const authStore = useAuthStore();
 
 const isLoading = ref(false);
+const validationErrors = ref<Record<string, string[]>>({});
+const errorMessage = ref<string>('');
 
 async function login() {
   try {
     isLoading.value = true;
+    validationErrors.value = {};
+    errorMessage.value = '';
+
     await authStore.login(form.value);
+  } catch (error: any) {
+    if (error.validationErrors) {
+      validationErrors.value = error.validationErrors;
+    } else if (error.response?.data?.message) {
+      errorMessage.value = error.response.data.message;
+    } else {
+      errorMessage.value = 'An error occurred during login';
+    }
   } finally {
     isLoading.value = false;
   }

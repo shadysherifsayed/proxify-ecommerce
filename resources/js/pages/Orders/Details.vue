@@ -1,12 +1,11 @@
 <template>
   <main-layout>
-    <v-container class="py-6">
-      <!-- Back Button -->
+    <v-container class="py-6">      <!-- Back Button -->
       <v-btn
         variant="text"
         prepend-icon="mdi-arrow-left"
         class="mb-4"
-        @click="$router.go(-1)"
+        @click="$router.push('/orders')"
       >
         Back to Orders
       </v-btn>
@@ -90,20 +89,36 @@
 
           <v-divider></v-divider>
 
-          <v-card-text class="pa-0">
-            <div
+          <v-card-text class="pa-0">            <div
               v-for="(product, index) in order.products"
               :key="product.id"
               class="d-flex align-center pa-4"
               :class="{ 'border-bottom': index < order.products.length - 1 }"
             >
-              <v-img
-                :src="product.image"
-                height="80"
-                width="80"
-                cover
-                class="rounded mr-4 flex-shrink-0"
-              />
+              <div class="product-image-container mr-4 flex-shrink-0">
+                <v-img
+                  :src="product.image"
+                  height="120"
+                  width="120"
+                  cover
+                  class="product-image elevation-2"
+                  :alt="product.title"
+                >
+                  <template #placeholder>
+                    <div class="d-flex align-center justify-center fill-height">
+                      <v-progress-circular
+                        color="grey-lighten-4"
+                        indeterminate
+                      />
+                    </div>
+                  </template>
+                  <template #error>
+                    <div class="d-flex align-center justify-center fill-height bg-grey-lighten-3">
+                      <v-icon icon="mdi-image-broken" color="grey" size="32" />
+                    </div>
+                  </template>
+                </v-img>
+              </div>
               
               <div class="flex-grow-1">
                 <h3 class="text-h6 font-weight-medium mb-2">
@@ -242,5 +257,39 @@ onMounted(() => {
 
 .border-bottom {
   border-bottom: 1px solid rgba(var(--v-border-color), 0.12);
+}
+
+.product-image-container {
+  position: relative;
+}
+
+.product-image {
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.2s ease-in-out;
+}
+
+.product-image:hover {
+  transform: scale(1.05);
+}
+
+.product-image-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  background: linear-gradient(45deg, rgba(99, 102, 241, 0.1), rgba(168, 85, 247, 0.1));
+  background-clip: padding-box;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.product-image-container:hover::after {
+  opacity: 1;
 }
 </style>

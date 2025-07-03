@@ -40,4 +40,15 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class, 'category_id');
     }
+
+    public function getImageAttribute(string $image): string
+    {
+        // If the image is a URL, return it as is
+        if (filter_var($image, FILTER_VALIDATE_URL)) {
+            return $image;
+        }
+
+        // Otherwise, return the local storage path
+        return asset("storage/{$image}");
+    }
 }

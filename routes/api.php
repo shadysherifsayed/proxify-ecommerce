@@ -16,7 +16,9 @@ use App\Http\Controllers\Api\V1\Auth\AuthenticatedUserController;
 Route::middleware(['api', 'auth:sanctum'])
     ->group(function () {
         Route::apiResource('categories', CategoryController::class)->only('index');
+        
         Route::apiResource('products', ProductController::class)->only('index', 'show', 'update');
+        Route::post('products/{product}/image', [ProductController::class, 'updateImage'])->name('products.image.update');
 
         Route::get('carts', [CartController::class, 'show'])->name('carts.show');
         Route::delete('carts', [CartController::class, 'destroy'])->name('carts.destroy');

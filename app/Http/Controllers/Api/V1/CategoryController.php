@@ -19,6 +19,6 @@ class CategoryController extends Controller
     {
         $categories = $this->categoryService->listCategories();
 
-        return response()->json($categories);
+        return response()->json(compact('categories'));
     }
 }

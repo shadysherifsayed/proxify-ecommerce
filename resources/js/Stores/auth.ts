@@ -4,7 +4,6 @@ import { User } from '@/Types/entities';
 import { LoginRequest, RegisterRequest } from '@/Types/requests';
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
-import { useCartStore } from './cart';
 
 export const useAuthStore = defineStore(
   'auth',
@@ -14,13 +13,10 @@ export const useAuthStore = defineStore(
 
     const isAuthenticated = computed(() => !!user.value);
 
-    const cartStore = useCartStore()
-
     async function login(data: LoginRequest) {
       const response = await AuthService.login(data);
       user.value = response.user;
       setTokenAndNavigate(response.token ?? '');
-      cartStore.fetchCart(); // Assuming you have a cart store to fetch the cart after login
     }
 
     async function logout() {
@@ -37,7 +33,6 @@ export const useAuthStore = defineStore(
       const response = await AuthService.register(data);
       user.value = response.user;
       setTokenAndNavigate(response.token ?? '');
-      cartStore.fetchCart(); // Assuming you have a cart store to fetch the cart after registration
     }
 
     function setTokenAndNavigate(t: string) {

@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\Order;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class OrderPolicy
 {
@@ -13,7 +12,7 @@ class OrderPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,7 +20,7 @@ class OrderPolicy
      */
     public function view(User $user, Order $order): bool
     {
-        return false;
+        return $order->user()->is($user);
     }
 
     /**
@@ -29,7 +28,7 @@ class OrderPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -37,7 +36,7 @@ class OrderPolicy
      */
     public function update(User $user, Order $order): bool
     {
-        return false;
+        return $order->user()->is($user);
     }
 
     /**
@@ -45,7 +44,7 @@ class OrderPolicy
      */
     public function delete(User $user, Order $order): bool
     {
-        return false;
+        return $order->user()->is($user);
     }
 
     /**
@@ -53,7 +52,7 @@ class OrderPolicy
      */
     public function restore(User $user, Order $order): bool
     {
-        return false;
+        return $order->user()->is($user);
     }
 
     /**
@@ -61,6 +60,6 @@ class OrderPolicy
      */
     public function forceDelete(User $user, Order $order): bool
     {
-        return false;
+        return $order->user()->is($user);
     }
 }

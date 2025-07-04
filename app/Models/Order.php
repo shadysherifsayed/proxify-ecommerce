@@ -27,6 +27,7 @@ class Order extends Model
      */
     protected $casts = [
         'status' => OrderStatus::class,
+        'total_price' => 'float',
     ];
 
     /**

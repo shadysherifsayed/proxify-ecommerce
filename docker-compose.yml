@@ -1,0 +1,62 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: shadelane_app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    ports:
+      - "8000:80"
+    depends_on:
+      - db
+    networks:
+      - shadelane_network
+    environment:
+      - DB_HOST=db
+      - DB_DATABASE=shadelane
+      - DB_USERNAME=root
+      - DB_PASSWORD=secret
+
+  db:
+    image: mysql:8.0
+    container_name: shadelane_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: shadelane
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_PASSWORD: secret
+      MYSQL_USER: shadelane
+    volumes:
+      - dbdata:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - shadelane_network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: shadelane_phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: secret
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+    networks:
+      - shadelane_network
+
+networks:
+  shadelane_network:
+    driver: bridge
+
+volumes:
+  dbdata:
+    driver: local

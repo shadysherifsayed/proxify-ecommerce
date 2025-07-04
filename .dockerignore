@@ -1,0 +1,58 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Documentation
+README.md
+DOCKER.md
+*.md
+
+# Environment
+.env.example
+.env.local
+.env.*.local
+
+# Dependencies
+node_modules
+vendor
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Laravel
+storage/app/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+storage/logs/*
+bootstrap/cache/*
+!storage/app/.gitignore
+!storage/framework/.gitignore
+!storage/framework/cache/.gitignore
+!storage/framework/sessions/.gitignore
+!storage/framework/views/.gitignore
+!storage/logs/.gitignore
+!bootstrap/cache/.gitignore
+
+# Build artifacts
+public/build
+public/hot
+
+# Symlinked directories
+public/storage
+
+# Testing
+coverage
+.phpunit.result.cache
+
+# Temporary files
+*.tmp
+*.temp

@@ -12,30 +12,29 @@ class SyncProductsAction
 
     public function execute(): void
     {
-        $productsResponse = $this->productClient->list();
+        try {
+            $productsResponse = $this->productClient->list()->throw();
 
-        if ($productsResponse->failed()) {
-            // Handle the error, e.g., log it or throw an exception
+            $products = $productsResponse->json();
+
+            foreach ($products as $product) {
+                Product::updateOrCreate(
+                    [
+                        'external_id' => $product['id'],
+                    ],
+                    [
+                        'title' => $product['title'],
+                        'price' => $product['price'],
+                        'description' => $product['description'],
+                        'image' => $product['image'],
+                        'rating' => $product['rating']['rate'] ?? 0,
+                        'reviews_count' => $product['rating']['count'] ?? 0,
+                        'category_id' => Category::firstOrCreate(['name' => $product['category']])->id,
+                    ]
+                );
+            }
+        } catch (\Exception $e) {
             throw new \Exception('Failed to fetch products from FakeStore API');
-        }
-
-        $products = $productsResponse->json();
-
-        foreach ($products as $product) {
-            Product::updateOrCreate(
-                [
-                    'external_id' => $product['id'],
-                ],
-                [
-                    'title' => $product['title'],
-                    'price' => $product['price'],
-                    'description' => $product['description'],
-                    'image' => $product['image'],
-                    'rating' => $product['rating']['rate'] ?? 0,
-                    'reviews_count' => $product['rating']['count'] ?? 0,
-                    'category_id' => Category::firstOrCreate(['name' => $product['category']])->id,
-                ]
-            );
         }
     }
 }

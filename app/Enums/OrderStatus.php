@@ -15,8 +15,8 @@ enum OrderStatus: string
     public function canTransitionTo(string $status): bool
     {
         return match ($this) {
-            self::PENDING => $status === 'processing',
-            self::PROCESSING => $status === 'completed' || $status === 'cancelled',
+            self::PENDING => $status === self::PROCESSING->value || $status === self::CANCELLED->value,
+            self::PROCESSING => $status === self::COMPLETED->value || $status === self::CANCELLED->value,
             self::COMPLETED => false,
             self::CANCELLED => false,
         };

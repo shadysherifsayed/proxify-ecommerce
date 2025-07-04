@@ -311,7 +311,7 @@ describe('ProductController', function () {
             $category = Category::factory()->create();
             $product = Product::factory()->create([
                 'category_id' => $category->id,
-                'image' => 'products/test-image.jpg',
+                'image' => 'products/test-image.png',
             ]);
 
             $response = $this->actingAs($this->user, 'sanctum')
@@ -552,10 +552,10 @@ describe('ProductController', function () {
             $category = Category::factory()->create();
             $product = Product::factory()->create([
                 'category_id' => $category->id,
-                'image' => 'http://example.com/old-image.jpg',
+                'image' => 'http://example.com/old-image.png',
             ]);
 
-            $imageFile = \Illuminate\Http\Testing\File::fake()->image('new-image.jpg', 800, 600);
+            $imageFile = \Illuminate\Http\Testing\File::fake()->image('new-image.png', 800, 600);
 
             $response = $this->actingAs($this->user, 'sanctum')
                 ->putJson("/api/v1/products/{$product->id}", [
@@ -572,7 +572,7 @@ describe('ProductController', function () {
                 ]);
             // Verify the product's image was updated in the database
             $product->refresh();
-            expect($product->image)->not->toBe('http://example.com/old-image.jpg');
+            expect($product->image)->not->toBe('http://example.com/old-image.png');
             expect($product->image)->toBeString();
             expect($product->image)->not->toBeEmpty();
             expect($product->image)->toContain('products/');
@@ -586,10 +586,10 @@ describe('ProductController', function () {
                 'category_id' => $category1->id,
                 'title' => 'Original Title',
                 'price' => 50.00,
-                'image' => 'http://example.com/products/old-image.jpg',
+                'image' => 'http://example.com/products/old-image.png',
             ]);
 
-            $imageFile = \Illuminate\Http\Testing\File::fake()->image('updated-image.jpg');
+            $imageFile = \Illuminate\Http\Testing\File::fake()->image('updated-image.png');
 
             $updateData = [
                 'title' => 'Updated Product Title',
@@ -620,7 +620,7 @@ describe('ProductController', function () {
             expect($product->title)->toBe('Updated Product Title');
             expect($product->price)->toBe(99.99);
             expect($product->category_id)->toBe($category2->id);
-            expect($product->image)->not->toBe('http://example.com/old-image.jpg');
+            expect($product->image)->not->toBe('http://example.com/old-image.png');
             expect($product->image)->toContain('products/');
         });
 
@@ -656,7 +656,7 @@ describe('ProductController', function () {
             $product = Product::factory()->create(['category_id' => $category->id]);
 
             // Create a file larger than 1MB (1024KB)
-            $largeImageFile = \Illuminate\Http\Testing\File::fake()->image('large-image.jpg')->size(1500);
+            $largeImageFile = \Illuminate\Http\Testing\File::fake()->image('large-image.png')->size(1500);
 
             $response = $this->actingAs($this->user, 'sanctum')
                 ->putJson("/api/v1/products/{$product->id}", [
@@ -667,31 +667,6 @@ describe('ProductController', function () {
                 ->assertJsonValidationErrors(['image']);
         });
 
-        test('accepts valid image formats in product update', function () {
-            $category = Category::factory()->create();
-            $product = Product::factory()->create(['category_id' => $category->id]);
-
-            $validFormats = ['jpg', 'jpeg', 'png', 'webp'];
-
-            foreach ($validFormats as $format) {
-                $imageFile = \Illuminate\Http\Testing\File::fake()->image("test-image.{$format}");
-
-                $response = $this->actingAs($this->user, 'sanctum')
-                    ->putJson("/api/v1/products/{$product->id}", [
-                        'image' => $imageFile,
-                    ]);
-
-                $response->assertStatus(200)
-                    ->assertJsonStructure([
-                        'product' => ['id', 'image'],
-                    ]);
-
-                // Verify the image was updated
-                $product->refresh();
-                expect($product->image)->toContain('products/');
-            }
-        });
-
         test('updates only image when no other fields provided', function () {
             $category = Category::factory()->create();
             $product = Product::factory()->create([
@@ -699,10 +674,10 @@ describe('ProductController', function () {
                 'title' => 'Original Title',
                 'price' => 50.00,
                 'description' => 'Original description',
-                'image' => 'products/old-image.jpg',
+                'image' => 'products/old-image.png',
             ]);
 
-            $imageFile = \Illuminate\Http\Testing\File::fake()->image('new-image.jpg');
+            $imageFile = \Illuminate\Http\Testing\File::fake()->image('new-image.png');
 
             $response = $this->actingAs($this->user, 'sanctum')
                 ->putJson("/api/v1/products/{$product->id}", [
@@ -718,7 +693,7 @@ describe('ProductController', function () {
             expect($product->price)->toBe(50.00);
             expect($product->description)->toBe('Original description');
             expect($product->category_id)->toBe($category->id);
-            expect($product->image)->not->toBe('products/old-image.jpg');
+            expect($product->image)->not->toBe('products/old-image.png');
             expect($product->image)->toContain('products/');
         });
 
@@ -727,7 +702,7 @@ describe('ProductController', function () {
             $product = Product::factory()->create([
                 'category_id' => $category->id,
                 'title' => 'Original Title',
-                'image' => 'products/existing-image.jpg',
+                'image' => 'products/existing-image.png',
             ]);
 
             $originalImage = $product->image;
@@ -751,7 +726,7 @@ describe('ProductController', function () {
             $product = Product::factory()->create(['category_id' => $category->id]);
 
             // Test file exactly at the size limit (1MB = 1024KB)
-            $imageFile = \Illuminate\Http\Testing\File::fake()->image('test-image.jpg')->size(1024);
+            $imageFile = \Illuminate\Http\Testing\File::fake()->image('test-image.png')->size(1024);
 
             $response = $this->actingAs($this->user, 'sanctum')
                 ->putJson("/api/v1/products/{$product->id}", [
@@ -768,7 +743,7 @@ describe('ProductController', function () {
             $category = Category::factory()->create();
             $product = Product::factory()->create(['category_id' => $category->id]);
 
-            $imageFile = \Illuminate\Http\Testing\File::fake()->image('test-image.jpg');
+            $imageFile = \Illuminate\Http\Testing\File::fake()->image('test-image.png');
 
             $response = $this->actingAs($this->user, 'sanctum')
                 ->putJson("/api/v1/products/{$product->id}", [

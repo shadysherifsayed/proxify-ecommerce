@@ -14,7 +14,7 @@ class CheckoutCart implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(private Cart $cart)
+    public function __construct(public Cart $cart)
     {
         //
     }

@@ -5,6 +5,9 @@ namespace Tests\Feature\Api\V1\Controllers;
 use App\Models\User;
 use App\Models\Product;
 use App\Models\Category;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+uses(RefreshDatabase::class);
 
 describe('CategoryController', function () {
     beforeEach(function () {

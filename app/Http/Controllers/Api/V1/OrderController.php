@@ -5,11 +5,11 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\Order\UpdateOrderRequest;
 use App\Models\Order;
-use App\Models\User;
 use App\Services\CartService;
 use App\Services\OrderService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class OrderController extends Controller
 {
@@ -33,8 +33,7 @@ class OrderController extends Controller
      */
     public function show(Order $order): JsonResponse
     {
-        // @todo
-        // Check if order belongs to the authenticated user
+        Gate::authorize('view', $order);
 
         $order = $this->orderService->getOrder($order);
 
@@ -46,9 +45,8 @@ class OrderController extends Controller
      */
     public function update(UpdateOrderRequest $request, Order $order): JsonResponse
     {
+        Gate::authorize('update', $order);
 
-        // @todo
-        // Check if order belongs to the authenticated user
         $order = $this->orderService->updateOrder($order, $request->validated());
 
         return response()->json(compact('order'));

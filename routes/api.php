@@ -1,24 +1,23 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\V1\CartController;
-use App\Http\Controllers\Api\V1\OrderController;
-use App\Http\Controllers\Api\V1\ProductController;
-use App\Http\Controllers\Api\V1\CategoryController;
+use App\Http\Controllers\Api\V1\Auth\AuthenticatedUserController;
 use App\Http\Controllers\Api\V1\Auth\LoginController;
 use App\Http\Controllers\Api\V1\Auth\LogoutController;
-use App\Http\Controllers\Api\V1\CartProductController;
-use App\Http\Controllers\Api\V1\CartCheckoutController;
 use App\Http\Controllers\Api\V1\Auth\RegisterController;
-use App\Http\Controllers\Api\V1\Auth\AuthenticatedUserController;
+use App\Http\Controllers\Api\V1\CartCheckoutController;
+use App\Http\Controllers\Api\V1\CartController;
+use App\Http\Controllers\Api\V1\CartProductController;
+use App\Http\Controllers\Api\V1\CategoryController;
+use App\Http\Controllers\Api\V1\OrderController;
+use App\Http\Controllers\Api\V1\ProductController;
+use Illuminate\Support\Facades\Route;
 
 // Protected routes (authentication required)
 Route::middleware(['api', 'auth:sanctum'])
     ->group(function () {
         Route::apiResource('categories', CategoryController::class)->only('index');
-        
+
         Route::apiResource('products', ProductController::class)->only('index', 'show', 'update');
-        Route::post('products/{product}/image', [ProductController::class, 'updateImage'])->name('products.image.update');
 
         Route::get('carts', [CartController::class, 'show'])->name('carts.show');
         Route::delete('carts', [CartController::class, 'destroy'])->name('carts.destroy');

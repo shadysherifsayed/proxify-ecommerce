@@ -2,17 +2,14 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Models\User;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\V1\Order\UpdateOrderRequest;
 use App\Models\Order;
+use App\Models\User;
 use App\Services\CartService;
 use App\Services\OrderService;
 use Illuminate\Http\JsonResponse;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use App\Http\Resources\OrderResource;
-use App\Http\Requests\Api\V1\Order\UpdateOrderRequest;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class OrderController extends Controller
 {
@@ -30,7 +27,6 @@ class OrderController extends Controller
 
         return response()->json(compact('orders'));
     }
-
 
     /**
      * Display the specified order.

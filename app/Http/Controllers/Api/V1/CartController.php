@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use Illuminate\Http\Request;
-use App\Services\CartService;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Resources\Json\JsonResource;
+use App\Services\CartService;
+use Illuminate\Http\Request;
 
 class CartController extends Controller
 {
-
     public function __construct(private CartService $cartService) {}
 
     public function show(Request $request)

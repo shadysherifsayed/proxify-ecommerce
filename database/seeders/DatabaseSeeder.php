@@ -20,27 +20,27 @@ class DatabaseSeeder extends Seeder
             'Home & Garden',
             'Sports & Outdoors',
             'Books',
-            'Health & Beauty'
+            'Health & Beauty',
         ];
 
         foreach ($categories as $categoryName) {
             \App\Models\Category::firstOrCreate([
-                'name' => $categoryName
+                'name' => $categoryName,
             ]);
         }
 
         // Create products for each category
         $categoryIds = \App\Models\Category::pluck('id')->toArray();
-        
+
         foreach ($categoryIds as $categoryId) {
             \App\Models\Product::factory(20)->create([
-                'category_id' => $categoryId
+                'category_id' => $categoryId,
             ]);
         }
 
         // Create a test user if it doesn't exist
         User::firstOrCreate([
-            'email' => 'test@example.com'
+            'email' => 'test@example.com',
         ], [
             'name' => 'Test User',
             'password' => bcrypt('password'),

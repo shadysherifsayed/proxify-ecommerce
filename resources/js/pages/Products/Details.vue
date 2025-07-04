@@ -54,7 +54,7 @@
             <v-card class="product-image-card" elevation="3">
               <div class="pa-4">
                 <v-img
-                  :src="editMode ? editForm.image : product.image"
+                  :src="product.image"
                   :alt="product.title"
                   height="400"
                   cover
@@ -277,7 +277,6 @@ const editForm = ref({
   title: '',
   description: '',
   price: 0,
-  image: '',
   category_id: 0,
 });
 
@@ -305,7 +304,6 @@ function startEdit() {
     title: product.value.title,
     description: product.value.description,
     price: product.value.price,
-    image: product.value.image,
     category_id: product.value.category.id,
   };
   validationErrors.value = {};
@@ -320,7 +318,6 @@ function cancelEdit() {
     title: '',
     description: '',
     price: 0,
-    image: '',
     category_id: 0,
   };
 }
@@ -354,18 +351,16 @@ async function saveChanges() {
 }
 
 async function handleImageUpload() {
-  if (!selectedImageFile.value || !productId.value) return;
-
-  const file = selectedImageFile.value;
-
-  isUploadingImage.value = true;
-
+  if (!selectedImageFile.value || !product.value) return;
   try {
+    isUploadingImage.value = true;
     const response = await ProductService.uploadProductImage(
-      productId.value,
-      file,
+      product.value.id,
+      selectedImageFile.value,
     );
-    editForm.value.image = response.url;
+    if (product.value) {
+      product.value.image = response.product.image;
+    }
   } catch {
     validationErrors.value.image = ['Failed to upload image'];
   } finally {

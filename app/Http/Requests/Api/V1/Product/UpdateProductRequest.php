@@ -2,13 +2,10 @@
 
 namespace App\Http\Requests\Api\V1\Product;
 
-use App\Enums\OrderStatus;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class UpdateProductRequest extends FormRequest
 {
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -23,7 +20,7 @@ class UpdateProductRequest extends FormRequest
                 'min:1',
             ],
             'title' => [
-                'required',
+                'sometimes',
                 'string',
                 'max:255',
             ],
@@ -35,6 +32,12 @@ class UpdateProductRequest extends FormRequest
             'category_id' => [
                 'sometimes',
                 'exists:categories,id',
+            ],
+            'image' => [
+                'sometimes',
+                'image',
+                'mimes:jpeg,jpg,png,webp',
+                'max:1024', // 1MB max
             ],
         ];
     }

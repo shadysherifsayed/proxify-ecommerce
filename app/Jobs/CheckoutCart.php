@@ -2,10 +2,10 @@
 
 namespace App\Jobs;
 
-use App\Models\Cart;
 use App\Actions\CheckoutCartAction;
-use Illuminate\Foundation\Queue\Queueable;
+use App\Models\Cart;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Queue\Queueable;
 
 class CheckoutCart implements ShouldQueue
 {

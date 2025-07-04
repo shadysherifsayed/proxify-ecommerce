@@ -10,8 +10,6 @@ abstract class AbstractClient
 {
     /**
      * The base URL for the FakeStore API.
-     *
-     * @var string
      */
     private string $baseUrl;
 
@@ -21,11 +19,12 @@ abstract class AbstractClient
      * Initialize the base URL for the FakeStore API client.
      *
      * @throws \InvalidArgumentException if the base URL is not set in the configuration.
+     *
      * @see config/services.php for the 'fakestore.base_url' configuration.
      */
     public function __construct()
     {
-        if (!config()->has('services.fakestore.base_url')) {
+        if (! config()->has('services.fakestore.base_url')) {
             throw new \InvalidArgumentException('The base URL for the FakeStore API is not set in the configuration.');
         }
 
@@ -35,20 +34,20 @@ abstract class AbstractClient
     /**
      * Get the full URL for the given endpoint.
      *
-     * @param string $endpoint The API endpoint to append to the base URL.
+     * @param  string  $endpoint  The API endpoint to append to the base URL.
      * @return string The full URL for the API request.
      */
     private function getFullUrl(string $endpoint): string
     {
-        return rtrim($this->baseUrl, '/') . '/' . ltrim($endpoint, '/');
+        return rtrim($this->baseUrl, '/').'/'.ltrim($endpoint, '/');
     }
 
     /**
      * Send an HTTP request to the FakeStore API.
      *
-     * @param HttpMethod $method The HTTP method (e.g., 'get', 'post').
-     * @param string $endpoint The API endpoint to send the request to.
-     * @param array $data Optional data to send with the request.
+     * @param  HttpMethod  $method  The HTTP method (e.g., 'get', 'post').
+     * @param  string  $endpoint  The API endpoint to send the request to.
+     * @param  array  $data  Optional data to send with the request.
      * @return \Illuminate\Http\Client\Response The response from the API.
      */
     private function send(HttpMethod $method, string $endpoint, array $data = []): Response
@@ -61,8 +60,8 @@ abstract class AbstractClient
     /**
      * Send a GET request to the specified endpoint.
      *
-     * @param string $endpoint The API endpoint to send the GET request to.
-     * @param array $params Optional query parameters to include in the request.
+     * @param  string  $endpoint  The API endpoint to send the GET request to.
+     * @param  array  $params  Optional query parameters to include in the request.
      * @return \Illuminate\Http\Client\Response The response from the API.
      */
     protected function get($endpoint, $params = [])
@@ -73,8 +72,8 @@ abstract class AbstractClient
     /**
      * Send a POST request to the specified endpoint.
      *
-     * @param string $endpoint The API endpoint to send the POST request to.
-     * @param array $data Optional data to include in the request body.
+     * @param  string  $endpoint  The API endpoint to send the POST request to.
+     * @param  array  $data  Optional data to include in the request body.
      * @return \Illuminate\Http\Client\Response The response from the API.
      */
     protected function post($endpoint, $data = [])

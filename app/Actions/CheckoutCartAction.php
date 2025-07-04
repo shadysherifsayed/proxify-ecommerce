@@ -11,8 +11,7 @@ class CheckoutCartAction
     /**
      * Execute the checkout process for the given cart.
      *
-     * @param Cart $cart The cart to checkout
-     * @return void
+     * @param  Cart  $cart  The cart to checkout
      */
     public function execute(Cart $cart): void
     {
@@ -25,15 +24,15 @@ class CheckoutCartAction
 
             // Ensure the cart is not empty
             $order = Order::create([
-                'user_id'       => $cart->user_id,
-                'total_price'   => $cart->products->sum(fn($product) => $product->pivot->quantity * $product->price),
+                'user_id' => $cart->user_id,
+                'total_price' => $cart->products->sum(fn ($product) => $product->pivot->quantity * $product->price),
             ]);
 
             // Attach products to the order
             foreach ($cart->products as $product) {
                 $order->products()->attach($product->id, [
                     'quantity' => $product->pivot->quantity,
-                    'price'    => $product->price,
+                    'price' => $product->price,
                 ]);
             }
 
@@ -42,7 +41,7 @@ class CheckoutCartAction
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
-            throw new \Exception('Checkout failed: ' . $e->getMessage());
+            throw new \Exception('Checkout failed: '.$e->getMessage());
         }
     }
 }

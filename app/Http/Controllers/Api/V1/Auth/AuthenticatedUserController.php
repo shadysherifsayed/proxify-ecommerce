@@ -12,7 +12,7 @@ class AuthenticatedUserController extends Controller
     {
         // Return the authenticated user
         return response()->json([
-            'user' => $request->user()
+            'user' => $request->user(),
         ]);
     }
 }

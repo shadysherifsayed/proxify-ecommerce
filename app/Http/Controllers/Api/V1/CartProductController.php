@@ -2,16 +2,15 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Models\Product;
-use Illuminate\Http\Request;
-use App\Services\CartService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\Cart\AddProductRequest;
+use App\Models\Product;
+use App\Services\CartService;
+use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class CartProductController extends Controller
 {
-
     /**
      * Create a new controller instance.
      */

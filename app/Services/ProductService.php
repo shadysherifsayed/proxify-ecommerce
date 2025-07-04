@@ -3,13 +3,11 @@
 namespace App\Services;
 
 use App\Models\Product;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Contracts\Pagination\CursorPaginator;
+use Illuminate\Http\UploadedFile;
 
 class ProductService
 {
-
     public function listProducts(): CursorPaginator
     {
         $query = Product::with('category');
@@ -24,8 +22,11 @@ class ProductService
 
     public function updateProduct(Product $product, array $data): Product
     {
-
         $product->update($data);
+
+        if (isset($data['image'])) {
+            $this->updateProductImage($product, $data['image']);
+        }
 
         return $product->load('category');
     }
@@ -33,10 +34,10 @@ class ProductService
     /**
      * Update product image
      */
-    public function updateProductImage(Product $product, UploadedFile $image): string
+    private function updateProductImage(Product $product, UploadedFile $image): string
     {
         // Store the new image
-        $imagePath = $image->store('products', 'public');
+        $imagePath = $image->store('products');
 
         // Update the product with new image URL
         $product->update(['image' => $imagePath]);

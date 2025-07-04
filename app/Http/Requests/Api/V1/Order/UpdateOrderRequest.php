@@ -8,7 +8,6 @@ use Illuminate\Validation\Rule;
 
 class UpdateOrderRequest extends FormRequest
 {
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -24,7 +23,7 @@ class UpdateOrderRequest extends FormRequest
                 // Ensure the status can transition from the current status
                 function ($attribute, $value, $fail) {
                     $order = $this->route('order');
-                    if (!$order->status->canTransitionTo($value)) {
+                    if (! $order->status->canTransitionTo($value)) {
                         $fail("The order cannot transition to the status '$value'.");
                     }
                 },

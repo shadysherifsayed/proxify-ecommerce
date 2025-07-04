@@ -23,13 +23,14 @@ class ProductService extends BaseService {
     return await this.send('PATCH', `products/${productId}`, data);
   }
 
-  async uploadProductImage(productId: number, file: File): Promise<{ url: string }> {
-    
+  async uploadProductImage(productId: number, file: File): Promise<{ product: Product }> {
     const formData = new FormData();
     
     formData.append('image', file);
 
-    return await this.send('POST', `products/${productId}/image`, formData, {
+    formData.append('_method', 'PUT');
+
+    return await this.send('POST', `products/${productId}`, formData, {
       'Content-Type': 'multipart/form-data',
     });
   }

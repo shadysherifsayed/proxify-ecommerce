@@ -2,9 +2,9 @@
 
 namespace App\Actions;
 
-use App\Models\Product;
-use App\Models\Category;
 use App\Clients\FakeStore\ProductClient;
+use App\Models\Category;
+use App\Models\Product;
 
 class SyncProductsAction
 {
@@ -24,7 +24,7 @@ class SyncProductsAction
         foreach ($products as $product) {
             Product::updateOrCreate(
                 [
-                    'external_id' => $product['id']
+                    'external_id' => $product['id'],
                 ],
                 [
                     'title' => $product['title'],

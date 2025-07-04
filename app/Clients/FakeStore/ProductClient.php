@@ -9,7 +9,7 @@ class ProductClient extends AbstractClient
     /**
      * Get a list of products.
      *
-     * @param array $query Optional query parameters for filtering or pagination.
+     * @param  array  $query  Optional query parameters for filtering or pagination.
      * @return \Illuminate\Http\Client\Response The response containing the list of products.
      */
     public function list(): \Illuminate\Http\Client\Response

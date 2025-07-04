@@ -18,7 +18,6 @@ class Product extends Model
      */
     protected $fillable = ['title', 'price', 'description', 'image', 'rating', 'reviews_count', 'category_id', 'external_id'];
 
-
     /**
      * The attributes that should be cast to native types.
      *
@@ -30,11 +29,8 @@ class Product extends Model
         'reviews_count' => 'integer',
     ];
 
-
     /**
      * Get the category that owns the product.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function category(): BelongsTo
     {

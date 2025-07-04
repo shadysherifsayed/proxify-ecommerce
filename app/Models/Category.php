@@ -17,11 +17,8 @@ class Category extends Model
      */
     protected $fillable = ['name'];
 
-
     /**
      * Get the products for the category.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function products(): \Illuminate\Database\Eloquent\Relations\HasMany
     {

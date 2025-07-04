@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Actions\SyncProductsAction;
 use App\Models\Product;
 use Illuminate\Console\Command;
-use App\Actions\SyncProductsAction;
 
 class SyncProducts extends Command
 {
@@ -35,8 +35,8 @@ class SyncProducts extends Command
 
         $endTime = microtime(true);
 
-        $this->info('Product sync completed in ' . round($endTime - $startTime, 2) . ' seconds.');
-        
+        $this->info('Product sync completed in '.round($endTime - $startTime, 2).' seconds.');
+
         $this->info(sprintf('%s products have been synced.', Product::count()));
     }
 }

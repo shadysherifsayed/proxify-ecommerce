@@ -3,15 +3,15 @@
 namespace App\Services;
 
 use App\Models\Cart;
-use App\Models\User;
 use App\Models\Product;
+use App\Models\User;
 
 class CartService
 {
     /**
      * List products in the cart.
      *
-     * @param \App\Models\Order $order The order/cart to get products from
+     * @param  \App\Models\Order  $order  The order/cart to get products from
      * @return \Illuminate\Support\Collection Collection of products with pivot data (quantity, price)
      */
     public function getCart(User $user): Cart
@@ -24,9 +24,9 @@ class CartService
     /**
      * Add a product to the cart.
      *
-     * @param \App\Models\Order $order The order/cart to add the product to
-     * @param \App\Models\Product $product The product to add to the cart
-     * @param string $quantity The quantity of the product to add
+     * @param  \App\Models\Order  $order  The order/cart to add the product to
+     * @param  \App\Models\Product  $product  The product to add to the cart
+     * @param  string  $quantity  The quantity of the product to add
      * @return void
      */
     public function addProduct(User $user, Product $product, int $quantity)
@@ -35,17 +35,16 @@ class CartService
 
         $cart->products()->syncWithoutDetaching([
             $product->id => [
-                'quantity'  => $quantity,
-            ]
+                'quantity' => $quantity,
+            ],
         ]);
     }
 
     /**
      * Remove a product from the cart.
      *
-     * @param \App\Models\Order $order The order/cart to remove the product from
-     * @param \App\Models\Product $product The product to remove from the cart
-     * @return void
+     * @param  \App\Models\Order  $order  The order/cart to remove the product from
+     * @param  \App\Models\Product  $product  The product to remove from the cart
      */
     public function removeProduct(User $user, Product $product): void
     {
@@ -57,8 +56,7 @@ class CartService
     /**
      * Clear the cart.
      *
-     * @param \App\Models\User $user The user whose cart to clear
-     * @return void
+     * @param  \App\Models\User  $user  The user whose cart to clear
      */
     public function clearCart(User $user): void
     {

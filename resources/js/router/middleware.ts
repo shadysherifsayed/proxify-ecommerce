@@ -21,7 +21,6 @@ export async function guestMiddleware(
   next: NavigationGuardNext,
 ) {
   const authStore = useAuthStore();
-  await authStore.fetchUser(); // Ensure auth status is checked
   if (authStore.isAuthenticated) {
     next({ name: 'home' });
   } else {

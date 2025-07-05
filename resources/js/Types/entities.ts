@@ -24,6 +24,7 @@ export interface Product {
   price: number;
   reviews_count: number;
   rating: number;
+  category_id: number;
   created_at: string;
   updated_at: string;
   category: Category;

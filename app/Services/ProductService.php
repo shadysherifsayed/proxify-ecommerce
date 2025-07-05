@@ -37,7 +37,7 @@ class ProductService
     private function updateProductImage(Product $product, UploadedFile $image): string
     {
         // Store the new image
-        $imagePath = $image->store('products');
+        $imagePath = $image->store('products', 'public');
 
         // Update the product with new image URL
         $product->update(['image' => $imagePath]);

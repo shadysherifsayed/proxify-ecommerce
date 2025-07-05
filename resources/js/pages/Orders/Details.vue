@@ -20,6 +20,7 @@
         description="The order you are looking for does not exist or has been removed."
         icon="mdi-package-variant-closed"
         :back-action="() => router.push('/orders')"
+        back-text="Back to Orders"
       />
     </v-container>
   </main-layout>

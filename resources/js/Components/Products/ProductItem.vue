@@ -13,15 +13,17 @@ const emit = defineEmits<{
 
 <template>
   <v-card class="d-flex flex-column" height="100%">
-    <v-img height="300" :src="product.image" cover>
-      <template #error>
-        <div
-          class="d-flex align-center justify-center fill-height bg-grey-lighten-3"
-        >
-          <v-icon icon="mdi-image-broken" color="grey" size="64" />
-        </div>
-      </template>
-    </v-img>
+    <div class="bg-white" height="300px">
+      <v-img height="300" :src="product.image" contain>
+        <template #error>
+          <div
+            class="d-flex align-center justify-center fill-height bg-grey-lighten-3"
+          >
+            <v-icon icon="mdi-image-broken" color="grey" size="64" />
+          </div>
+        </template>
+      </v-img>
+    </div>
 
     <v-chip rounded="sm" class="text-uppercase">
       <v-icon icon="mdi-tag" size="small" class="me-1"></v-icon>

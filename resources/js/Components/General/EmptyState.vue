@@ -5,12 +5,14 @@ withDefaults(
     description?: string;
     icon?: string;
     backAction?: () => void;
+    backText?: string;
   }>(),
   {
     title: 'Not Found',
     description:
       'The item you are looking for does not exist or has been removed.',
     icon: 'mdi-package-variant-closed',
+    backText: 'Back',
   },
 );
 </script>
@@ -30,7 +32,7 @@ withDefaults(
       {{ description }}
     </p>
     <v-btn v-if="backAction" color="primary" @click="backAction">
-      Back to Orders
+      {{ backText }}
     </v-btn>
   </div>
 </template>

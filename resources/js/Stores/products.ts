@@ -5,17 +5,12 @@ import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 
 export const useProductsStore = defineStore('products', () => {
-  const products = ref<Product[]>([]);
-
-  const productsMeta = ref<Pagination>({
-    next: null,
-    prev: null,
-  });
-
   const product = ref<Product | null>(null);
+  const products = ref<Product[]>([]);
+  const productsMeta = ref<Pagination | null>(null);
   const isLoading = ref(false);
-
-  const hasMore = computed(() => productsMeta.value.next !== null);
+  const isUpdating = ref(false);
+  const hasMore = computed(() => productsMeta.value?.next !== null);
 
   /**
    * Fetches the initial list of products from the ProductService.
@@ -42,6 +37,47 @@ export const useProductsStore = defineStore('products', () => {
     }
   }
 
+  async function fetchProduct(productId: number) {
+    try {
+      isLoading.value = true;
+      const response = await ProductService.fetchProduct(productId);
+      product.value = response.product;
+    } catch (error) {
+      console.error('Error fetching product:', error);
+      product.value = null;
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  async function updateProduct(productId: number, data: Partial<Product>) {
+    try {
+      isUpdating.value = true;
+      const response = await ProductService.updateProduct(productId, data);
+      product.value = response.product;
+    } catch (error) {
+      console.error('Error updating product:', error);
+      throw error; // Re-throw to handle in the component
+    } finally {
+      isUpdating.value = false;
+    }
+  }
+
+
+  async function updateProductImage(productId: number, imageFile: File) {
+    try {
+      isUpdating.value = true;
+      const response = await ProductService.uploadProductImage(productId, imageFile);
+      product.value = response.product;
+    } catch (error) {
+      console.error('Error uploading product image:', error);
+      throw error; // Re-throw to handle in the component
+    } finally {
+      isUpdating.value = false;
+    }
+  }
+
+
   /**
    * Resets the products state and fetches fresh data
    */
@@ -59,11 +95,16 @@ export const useProductsStore = defineStore('products', () => {
     products,
     productsMeta,
     isLoading,
+    isUpdating,
+    
     // Getters
     hasMore,
 
     // Actions
     fetchProducts,
     resetProducts,
+    fetchProduct,
+    updateProduct,
+    updateProductImage,
   };
 });

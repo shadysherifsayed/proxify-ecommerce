@@ -1,3 +1,106 @@
+<script lang="ts" setup>
+import EmptyState from '@/Components/General/EmptyState.vue';
+import SpinnerLoader from '@/Components/General/SpinnerLoader.vue';
+import ProductDetails from '@/Components/Products/ProductDetails.vue';
+import ProductForm from '@/Components/Products/ProductForm.vue';
+import MainLayout from '@/Layouts/MainLayout.vue';
+import { useCategoriesStore } from '@/Stores/categories';
+import { useProductsStore } from '@/Stores/products';
+import { Product } from '@/Types/entities';
+import { storeToRefs } from 'pinia';
+import { computed, onMounted, ref } from 'vue';
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
+
+const error = ref<string | null>(null);
+const editMode = ref(false);
+const productData = ref<Pick<Product, 'title' | 'description' | 'price' | 'category_id'>>({
+  title: '',
+  description: '',
+  price: 0,
+  category_id: 0,
+});
+const validationErrors = ref<Record<string, string[]>>({});
+
+const productsStore = useProductsStore();
+const { product, isLoading, isUpdating } = storeToRefs(productsStore);
+
+const categoriesStore = useCategoriesStore();
+const { categories } = storeToRefs(categoriesStore);
+
+// Image handling
+const selectedImageFile = ref<File | null>(null);
+
+const productId = computed(() => route.params.id as unknown as number);
+
+async function fetchProduct() {
+  if (!productId.value || isNaN(productId.value)) {
+    error.value = 'Invalid product ID';
+    return;
+  }
+  await productsStore.fetchProduct(productId.value);
+  if (!product.value) {
+    error.value = 'Product not found';
+    return;
+  }
+}
+
+function startEdit() {
+  if (!product.value) return;
+  productData.value = {
+    title: product.value.title,
+    description: product.value.description,
+    price: product.value.price,
+    category_id: product.value.category_id,
+  };
+  editMode.value = true;
+  validationErrors.value = {};
+}
+
+function cancelEdit() {
+  editMode.value = false;
+  validationErrors.value = {};
+  selectedImageFile.value = null;
+  // Reset product data to original values
+  if (product.value) {
+    productData.value = {
+      title: product.value.title,
+      description: product.value.description,
+      price: product.value.price,
+      category_id: product.value.category_id,
+    };
+  }
+}
+
+async function saveChanges() {
+  if (!product.value) return;
+  try {
+    validationErrors.value = {};
+    await productsStore.updateProduct(product.value.id, productData.value);
+    editMode.value = false;
+  } catch (err: any) {
+    if (err.validationErrors) {
+      validationErrors.value = err.validationErrors;
+    }
+  }
+}
+
+async function handleImageUpload() {
+  if (!selectedImageFile.value || !product.value) return;
+  try {
+    await productsStore.updateProductImage(
+      product.value.id,
+      selectedImageFile.value,
+    );
+  } catch {
+    validationErrors.value.image = ['Failed to upload image'];
+  }
+}
+
+onMounted(fetchProduct);
+</script>
+
 <template>
   <MainLayout>
     <v-container class="py-6">
@@ -27,7 +130,8 @@
             color="success"
             prepend-icon="mdi-check"
             @click="saveChanges"
-            :isLoading="isSaving"
+            :isLoading="isUpdating"
+            :disabled="isUpdating"
             variant="elevated"
           >
             Save Changes
@@ -36,6 +140,7 @@
             color="error"
             prepend-icon="mdi-close"
             @click="cancelEdit"
+            :disabled="isUpdating"
             variant="outlined"
           >
             Cancel
@@ -50,14 +155,13 @@
       <div v-else-if="product">
         <v-row class="mb-6">
           <!-- Product Image -->
-          <v-col cols="12" lg="6">
+          <v-col cols="12" lg="4">
             <v-card class="product-image-card" elevation="3">
               <div class="pa-4">
                 <v-img
                   :src="product.image"
                   :alt="product.title"
-                  height="400"
-                  cover
+                  contain
                   class="product-image mb-4"
                 >
                   <template #placeholder>
@@ -89,287 +193,37 @@
                     :error-messages="validationErrors.image"
                     @change="handleImageUpload"
                   />
-                  <v-progress-linear
-                    v-if="isUploadingImage"
-                    color="primary"
-                    indeterminate
-                    class="mt-2"
-                  />
                 </div>
               </div>
             </v-card>
           </v-col>
           <!-- Product Information -->
-          <v-col cols="12" lg="6">
-            <v-card elevation="3" class="h-100 product-info-card">
-              <v-card-text class="pa-6">
-                <!-- Title -->
-                <div class="mb-6">
-                  <v-label
-                    class="text-subtitle-1 font-weight-medium mb-3 d-block"
-                    >Product Title</v-label
-                  >
-                  <div v-if="!editMode">
-                    <h2 class="text-h5 font-weight-bold text-primary">
-                      {{ product.title }}
-                    </h2>
-                  </div>
-                  <v-text-field
-                    v-else
-                    v-model="editForm.title"
-                    variant="outlined"
-                    density="comfortable"
-                    :error-messages="validationErrors.title"
-                    placeholder="Enter product title"
-                  />
-                </div>
+          <v-col cols="12" lg="8">
+            <ProductDetails v-if="!editMode" :product="product" />
 
-                <!-- Price -->
-                <div class="mb-6">
-                  <v-label
-                    class="text-subtitle-1 font-weight-medium mb-3 d-block"
-                    >Price</v-label
-                  >
-                  <div v-if="!editMode">
-                    <div class="text-h4 text-success font-weight-bold">
-                      ${{ product.price.toFixed(2) }}
-                    </div>
-                  </div>
-                  <v-text-field
-                    v-else
-                    v-model.number="editForm.price"
-                    variant="outlined"
-                    density="comfortable"
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    prepend-inner-icon="mdi-currency-usd"
-                    :error-messages="validationErrors.price"
-                    placeholder="0.00"
-                  />
-                </div>
-
-                <!-- Category -->
-                <div class="mb-6">
-                  <v-label
-                    class="text-subtitle-1 font-weight-medium mb-3 d-block"
-                    >Category</v-label
-                  >
-                  <div v-if="!editMode">
-                    <v-chip
-                      color="primary"
-                      variant="elevated"
-                      size="large"
-                      prepend-icon="mdi-tag"
-                    >
-                      {{ product.category.name }}
-                    </v-chip>
-                  </div>
-                  <v-select
-                    v-else
-                    v-model="editForm.category_id"
-                    :items="categories"
-                    item-title="name"
-                    item-value="id"
-                    variant="outlined"
-                    density="comfortable"
-                    prepend-inner-icon="mdi-tag"
-                    :error-messages="validationErrors.category_id"
-                    placeholder="Select a category"
-                  />
-                </div>
-
-                <!-- Rating -->
-                <div class="mb-6">
-                  <v-label
-                    class="text-subtitle-1 font-weight-medium mb-3 d-block"
-                    >Customer Rating</v-label
-                  >
-                  <div class="d-flex align-center">
-                    <v-rating
-                      :model-value="product.rating"
-                      readonly
-                      density="comfortable"
-                      color="amber"
-                      half-increments
-                      size="large"
-                    />
-                    <div class="ml-4">
-                      <div class="text-h6 font-weight-bold">
-                        {{ product.rating }}/5
-                      </div>
-                      <div class="text-body-2 text-grey-darken-1">
-                        ({{ product.reviews_count }} reviews)
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Description -->
-                <div class="mb-4">
-                  <v-label
-                    class="text-subtitle-1 font-weight-medium mb-3 d-block"
-                    >Description</v-label
-                  >
-                  <div v-if="!editMode">
-                    <p
-                      class="text-body-1 text-grey-darken-2 line-height-relaxed"
-                    >
-                      {{ product.description }}
-                    </p>
-                  </div>
-                  <v-textarea
-                    v-else
-                    v-model="editForm.description"
-                    variant="outlined"
-                    rows="5"
-                    :error-messages="validationErrors.description"
-                    placeholder="Enter product description"
-                  />
-                </div>
-              </v-card-text>
-            </v-card>
+            <ProductForm
+              v-else
+              :product="product"
+              :categories="categories"
+              :validation-errors="validationErrors"
+              v-model="productData"
+            />
           </v-col>
         </v-row>
-
-        <!-- Success Message -->
-        <v-alert
-          v-if="successMessage"
-          type="success"
-          class="mt-4"
-          :text="successMessage"
-          closable
-          @update:model-value="successMessage = ''"
-        />
       </div>
+
+      <!-- Not Found State -->
+      <EmptyState
+        v-else
+        title="Product Not Found"
+        description="The product you are looking for does not exist or has been removed."
+        icon="mdi-package-variant-closed"
+        :back-action="() => $router.push('/products')"
+        back-text="Back to Products"
+      />
     </v-container>
   </MainLayout>
 </template>
-
-<script lang="ts" setup>
-import SpinnerLoader from '@/Components/General/SpinnerLoader.vue';
-import MainLayout from '@/Layouts/MainLayout.vue';
-import ProductService from '@/Services/ProductService';
-import { useCategoriesStore } from '@/Stores/categories';
-import { Product } from '@/Types/entities';
-import { storeToRefs } from 'pinia';
-import { computed, onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
-
-const route = useRoute();
-
-const product = ref<Product | null>(null);
-const isLoading = ref(false);
-const error = ref('');
-const editMode = ref(false);
-const isSaving = ref(false);
-const successMessage = ref('');
-const validationErrors = ref<Record<string, string[]>>({});
-
-const categoriesStore = useCategoriesStore();
-const { categories } = storeToRefs(categoriesStore);
-
-// Image handling
-const selectedImageFile = ref<File | null>(null);
-const isUploadingImage = ref(false);
-
-const editForm = ref({
-  title: '',
-  description: '',
-  price: 0,
-  category_id: 0,
-});
-
-const productId = computed(() => route.params.id as unknown as number);
-
-async function fetchProduct() {
-  isLoading.value = true;
-  error.value = '';
-
-  try {
-    const response = await ProductService.fetchProduct(productId.value);
-    product.value = response.product;
-  } catch (err: any) {
-    error.value = err.response?.data?.message || 'Failed to load product';
-    console.error('Error fetching product:', err);
-  } finally {
-    isLoading.value = false;
-  }
-}
-
-function startEdit() {
-  if (!product.value) return;
-  editMode.value = true;
-  editForm.value = {
-    title: product.value.title,
-    description: product.value.description,
-    price: product.value.price,
-    category_id: product.value.category.id,
-  };
-  validationErrors.value = {};
-}
-
-function cancelEdit() {
-  editMode.value = false;
-  validationErrors.value = {};
-  selectedImageFile.value = null;
-  isUploadingImage.value = false;
-  editForm.value = {
-    title: '',
-    description: '',
-    price: 0,
-    category_id: 0,
-  };
-}
-
-async function saveChanges() {
-  if (!product.value) return;
-  isSaving.value = true;
-  validationErrors.value = {};
-  try {
-    const updatedProduct = await ProductService.updateProduct(
-      product.value.id,
-      editForm.value,
-    );
-    product.value = updatedProduct.product;
-    editMode.value = false;
-    successMessage.value = 'Product updated successfully!';
-
-    // Auto-hide success message after 3 seconds
-    setTimeout(() => {
-      successMessage.value = '';
-    }, 3000);
-  } catch (err: any) {
-    if (err.validationErrors) {
-      validationErrors.value = err.validationErrors;
-    } else {
-      error.value = err.response?.data?.message || 'Failed to update product';
-    }
-  } finally {
-    isSaving.value = false;
-  }
-}
-
-async function handleImageUpload() {
-  if (!selectedImageFile.value || !product.value) return;
-  try {
-    isUploadingImage.value = true;
-    const response = await ProductService.uploadProductImage(
-      product.value.id,
-      selectedImageFile.value,
-    );
-    if (product.value) {
-      product.value.image = response.product.image;
-    }
-  } catch {
-    validationErrors.value.image = ['Failed to upload image'];
-  } finally {
-    isUploadingImage.value = false;
-  }
-}
-
-onMounted(fetchProduct);
-</script>
 
 <style scoped>
 .product-image-card {

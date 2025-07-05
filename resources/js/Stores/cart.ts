@@ -5,6 +5,7 @@ import { computed, ref } from 'vue';
 
 export const useCartStore = defineStore('cart', () => {
   const cart = ref<Cart | null>(null);
+  const isCheckingOut = ref(false);
 
   const cartProducts = computed(() => cart.value?.products || []);
 
@@ -51,12 +52,14 @@ export const useCartStore = defineStore('cart', () => {
       return;
     }
     try {
+      isCheckingOut.value = true;
       const order = await CartService.checkoutCart();
       cart.value.products = []; 
       return order;
     } catch (error) {
-      console.error('Checkout failed:', error);
       throw error;
+    } finally {
+      isCheckingOut.value = false; 
     }
   }
 
@@ -71,7 +74,6 @@ export const useCartStore = defineStore('cart', () => {
     const existingProduct = cart.value.products.find(
       (item) => item.id === product.id,
     );
-
     
     if (!quantity && existingProduct) {
       quantity = existingProduct.pivot.quantity + 1; // Default to 1 if no quantity is specified
@@ -99,11 +101,17 @@ export const useCartStore = defineStore('cart', () => {
     );
   }
 
+  function resetCart() {
+    cart.value = null;
+  }
+
   return {
     cart,
     cartProducts,
     cartTotal,
     cartCount,
+    isCheckingOut,
+    resetCart,
     fetchCart,
     clearCart,
     addToCart,

@@ -52,6 +52,10 @@ export const useOrdersStore = defineStore('orders', () => {
     }
   }
 
+  function resetOrders() {
+    orders.value = [];
+  }
+
   function resetOrder() {
     order.value = null;
   }
@@ -71,5 +75,6 @@ export const useOrdersStore = defineStore('orders', () => {
     fetchOrder,
     updateOrder,
     fetchOrders,
+    resetOrders,
   };
 });

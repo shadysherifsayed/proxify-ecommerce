@@ -9,7 +9,8 @@ const modelValue = defineModel<boolean>({
 });
 
 const cartStore = useCartStore();
-const { cartProducts, cartTotal, cartCount } = storeToRefs(cartStore);
+const { cartProducts, cartTotal, cartCount, isCheckingOut } = storeToRefs(cartStore);
+
 </script>
 
 <template>
@@ -101,6 +102,7 @@ const { cartProducts, cartTotal, cartCount } = storeToRefs(cartStore);
               size="large"
               variant="elevated"
               :disabled="cartCount === 0"
+              :loading="isCheckingOut"
               prepend-icon="mdi-credit-card"
               class="text-none font-weight-bold"
               @click="cartStore.checkoutCart"

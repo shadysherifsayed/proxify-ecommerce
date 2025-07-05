@@ -13,6 +13,7 @@ class AuthService extends BaseService {
   }
 
   logout(): Promise<void> {
+    localStorage.removeItem('token');
     return this.send('POST', 'logout');
   }
 

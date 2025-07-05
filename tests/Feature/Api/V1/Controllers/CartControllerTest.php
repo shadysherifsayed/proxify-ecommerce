@@ -2,10 +2,10 @@
 
 namespace Tests\Feature\Api\V1\Controllers;
 
-use App\Models\User;
-use App\Models\Product;
-use App\Models\Category;
 use App\Models\Cart;
+use App\Models\Category;
+use App\Models\Product;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
@@ -27,14 +27,14 @@ describe('CartController', function () {
                         'user_id',
                         'created_at',
                         'updated_at',
-                        'products'
-                    ]
+                        'products',
+                    ],
                 ])
                 ->assertJson([
                     'cart' => [
                         'user_id' => $this->user->id,
-                        'products' => []
-                    ]
+                        'products' => [],
+                    ],
                 ]);
         });
 
@@ -43,12 +43,12 @@ describe('CartController', function () {
             $product1 = Product::factory()->create([
                 'category_id' => $category->id,
                 'title' => 'Product 1',
-                'price' => 99.99
+                'price' => 99.99,
             ]);
             $product2 = Product::factory()->create([
                 'category_id' => $category->id,
                 'title' => 'Product 2',
-                'price' => 149.99
+                'price' => 149.99,
             ]);
 
             // Create cart and add products
@@ -84,11 +84,11 @@ describe('CartController', function () {
                                     'product_id',
                                     'quantity',
                                     'created_at',
-                                    'updated_at'
-                                ]
-                            ]
-                        ]
-                    ]
+                                    'updated_at',
+                                ],
+                            ],
+                        ],
+                    ],
                 ]);
 
             $cart = $response->json('cart');
@@ -152,7 +152,7 @@ describe('CartController', function () {
 
             expect($response->json())->toHaveKey('cart');
             expect($response->json('cart'))->toHaveKeys([
-                'id', 'user_id', 'created_at', 'updated_at', 'products'
+                'id', 'user_id', 'created_at', 'updated_at', 'products',
             ]);
         });
 
@@ -162,7 +162,7 @@ describe('CartController', function () {
                 'category_id' => $category->id,
                 'price' => 99.99,
                 'rating' => 4.5,
-                'reviews_count' => 10
+                'reviews_count' => 10,
             ]);
 
             $cart = Cart::factory()->create(['user_id' => $this->user->id]);
@@ -191,25 +191,25 @@ describe('CartController', function () {
             $products = Product::factory()->count(50)->create(['category_id' => $category->id]);
 
             $cart = Cart::factory()->create(['user_id' => $this->user->id]);
-            
+
             // Add all products to cart
             foreach ($products as $product) {
                 $cart->products()->attach($product->id, ['quantity' => rand(1, 5)]);
             }
 
             $startTime = microtime(true);
-            
+
             $response = $this->actingAs($this->user, 'sanctum')
                 ->getJson('/api/v1/carts');
-            
+
             $endTime = microtime(true);
             $executionTime = $endTime - $startTime;
 
             $response->assertStatus(200);
-            
+
             // Ensure response time is reasonable
             expect($executionTime)->toBeLessThan(2.0);
-            
+
             $cartData = $response->json('cart');
             expect($cartData['products'])->toHaveCount(50);
         });
@@ -283,14 +283,14 @@ describe('CartController', function () {
         test('only clears current user cart', function () {
             $user1 = $this->user;
             $user2 = User::factory()->create();
-            
+
             $category = Category::factory()->create();
             $product = Product::factory()->create(['category_id' => $category->id]);
 
             // Create carts for both users
             $cart1 = Cart::factory()->create(['user_id' => $user1->id]);
             $cart2 = Cart::factory()->create(['user_id' => $user2->id]);
-            
+
             $cart1->products()->attach($product->id, ['quantity' => 1]);
             $cart2->products()->attach($product->id, ['quantity' => 1]);
 
@@ -303,7 +303,7 @@ describe('CartController', function () {
             // Verify only user1's cart was cleared
             $cart1->refresh();
             $cart2->refresh();
-            
+
             expect($cart1->products()->count())->toBe(0);
             expect($cart2->products()->count())->toBe(1);
         });
@@ -313,7 +313,7 @@ describe('CartController', function () {
             $products = Product::factory()->count(100)->create(['category_id' => $category->id]);
 
             $cart = Cart::factory()->create(['user_id' => $this->user->id]);
-            
+
             // Add all products to cart
             foreach ($products as $product) {
                 $cart->products()->attach($product->id, ['quantity' => 1]);
@@ -322,18 +322,18 @@ describe('CartController', function () {
             expect($cart->products()->count())->toBe(100);
 
             $startTime = microtime(true);
-            
+
             $response = $this->actingAs($this->user, 'sanctum')
                 ->deleteJson('/api/v1/carts');
-            
+
             $endTime = microtime(true);
             $executionTime = $endTime - $startTime;
 
             $response->assertStatus(204);
-            
+
             // Ensure response time is reasonable
             expect($executionTime)->toBeLessThan(2.0);
-            
+
             // Verify all products were removed
             $cart->refresh();
             expect($cart->products()->count())->toBe(0);
@@ -345,7 +345,7 @@ describe('CartController', function () {
 
             $cart = Cart::factory()->create(['user_id' => $this->user->id]);
             $cart->products()->attach($product->id, ['quantity' => 1]);
-            
+
             $originalCartId = $cart->id;
 
             $response = $this->actingAs($this->user, 'sanctum')
@@ -356,7 +356,7 @@ describe('CartController', function () {
             // Verify cart still exists but is empty
             $this->assertDatabaseHas('carts', [
                 'id' => $originalCartId,
-                'user_id' => $this->user->id
+                'user_id' => $this->user->id,
             ]);
 
             $cart->refresh();

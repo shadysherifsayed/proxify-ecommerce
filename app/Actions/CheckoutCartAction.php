@@ -34,7 +34,7 @@ class CheckoutCartAction
                     'quantity' => $product->pivot->quantity,
                     'price' => $product->price,
                     'created_at' => now(),
-                    'updated_at'=> now(),
+                    'updated_at' => now(),
                 ]);
             }
 

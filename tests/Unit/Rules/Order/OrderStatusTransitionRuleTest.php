@@ -13,53 +13,53 @@ beforeEach(function () {
 
 test('can be instantiated with valid order', function () {
     $rule = new OrderStatusTransitionRule($this->order);
-    
+
     expect($rule)->toBeInstanceOf(OrderStatusTransitionRule::class);
 });
 
 test('throws exception when order has null status', function () {
-    $order = new Order();
-    
-    expect(fn() => new OrderStatusTransitionRule($order))
+    $order = new Order;
+
+    expect(fn () => new OrderStatusTransitionRule($order))
         ->toThrow(InvalidArgumentException::class, 'Invalid order or order status.');
 });
 
 test('validation passes for valid pending to processing transition', function () {
     $rule = new OrderStatusTransitionRule($this->order);
     $failCallbackCalled = false;
-    
+
     $fail = function ($message) use (&$failCallbackCalled) {
         $failCallbackCalled = true;
     };
-    
+
     $rule->validate('status', OrderStatus::PROCESSING->value, $fail);
-    
+
     expect($failCallbackCalled)->toBeFalse();
 });
 
 test('validation passes for valid pending to cancelled transition', function () {
     $rule = new OrderStatusTransitionRule($this->order);
     $failCallbackCalled = false;
-    
+
     $fail = function ($message) use (&$failCallbackCalled) {
         $failCallbackCalled = true;
     };
-    
+
     $rule->validate('status', OrderStatus::CANCELLED->value, $fail);
-    
+
     expect($failCallbackCalled)->toBeFalse();
 });
 
 test('validation fails for invalid pending to completed transition', function () {
     $rule = new OrderStatusTransitionRule($this->order);
     $failMessage = null;
-    
+
     $fail = function ($message) use (&$failMessage) {
         $failMessage = $message;
     };
-    
+
     $rule->validate('status', OrderStatus::COMPLETED->value, $fail);
-    
+
     expect($failMessage)->not()->toBeNull();
     expect($failMessage)->toBe("The order cannot transition to the status 'completed'.");
 });
@@ -68,13 +68,13 @@ test('validation passes for valid processing to completed transition', function 
     $this->order->update(['status' => OrderStatus::PROCESSING]);
     $rule = new OrderStatusTransitionRule($this->order);
     $failCallbackCalled = false;
-    
+
     $fail = function ($message) use (&$failCallbackCalled) {
         $failCallbackCalled = true;
     };
-    
+
     $rule->validate('status', OrderStatus::COMPLETED->value, $fail);
-    
+
     expect($failCallbackCalled)->toBeFalse();
 });
 
@@ -82,13 +82,13 @@ test('validation passes for valid processing to cancelled transition', function 
     $this->order->update(['status' => OrderStatus::PROCESSING]);
     $rule = new OrderStatusTransitionRule($this->order);
     $failCallbackCalled = false;
-    
+
     $fail = function ($message) use (&$failCallbackCalled) {
         $failCallbackCalled = true;
     };
-    
+
     $rule->validate('status', OrderStatus::CANCELLED->value, $fail);
-    
+
     expect($failCallbackCalled)->toBeFalse();
 });
 
@@ -96,13 +96,13 @@ test('validation fails for invalid processing to pending transition', function (
     $this->order->update(['status' => OrderStatus::PROCESSING]);
     $rule = new OrderStatusTransitionRule($this->order);
     $failMessage = null;
-    
+
     $fail = function ($message) use (&$failMessage) {
         $failMessage = $message;
     };
-    
+
     $rule->validate('status', OrderStatus::PENDING->value, $fail);
-    
+
     expect($failMessage)->not()->toBeNull();
     expect($failMessage)->toBe("The order cannot transition to the status 'pending'.");
 });
@@ -110,22 +110,22 @@ test('validation fails for invalid processing to pending transition', function (
 test('validation fails for completed order transition to any status', function () {
     $this->order->update(['status' => OrderStatus::COMPLETED]);
     $rule = new OrderStatusTransitionRule($this->order);
-    
+
     $statuses = [
         OrderStatus::PENDING->value,
         OrderStatus::PROCESSING->value,
-        OrderStatus::CANCELLED->value
+        OrderStatus::CANCELLED->value,
     ];
-    
+
     foreach ($statuses as $status) {
         $failMessage = null;
-        
+
         $fail = function ($message) use (&$failMessage) {
             $failMessage = $message;
         };
-        
+
         $rule->validate('status', $status, $fail);
-        
+
         expect($failMessage)->not()->toBeNull();
         expect($failMessage)->toBe("The order cannot transition to the status '$status'.");
     }
@@ -134,22 +134,22 @@ test('validation fails for completed order transition to any status', function (
 test('validation fails for cancelled order transition to any status', function () {
     $this->order->update(['status' => OrderStatus::CANCELLED]);
     $rule = new OrderStatusTransitionRule($this->order);
-    
+
     $statuses = [
         OrderStatus::PENDING->value,
         OrderStatus::PROCESSING->value,
-        OrderStatus::COMPLETED->value
+        OrderStatus::COMPLETED->value,
     ];
-    
+
     foreach ($statuses as $status) {
         $failMessage = null;
-        
+
         $fail = function ($message) use (&$failMessage) {
             $failMessage = $message;
         };
-        
+
         $rule->validate('status', $status, $fail);
-        
+
         expect($failMessage)->not()->toBeNull();
         expect($failMessage)->toBe("The order cannot transition to the status '$status'.");
     }
@@ -158,13 +158,13 @@ test('validation fails for cancelled order transition to any status', function (
 test('validation fails for invalid status string', function () {
     $rule = new OrderStatusTransitionRule($this->order);
     $failMessage = null;
-    
+
     $fail = function ($message) use (&$failMessage) {
         $failMessage = $message;
     };
-    
+
     $rule->validate('status', 'invalid_status', $fail);
-    
+
     expect($failMessage)->not()->toBeNull();
     expect($failMessage)->toBe("The order cannot transition to the status 'invalid_status'.");
 });
@@ -173,13 +173,13 @@ test('all valid transitions pass validation', function (OrderStatus $fromStatus,
     $this->order->update(['status' => $fromStatus]);
     $rule = new OrderStatusTransitionRule($this->order);
     $failCallbackCalled = false;
-    
+
     $fail = function ($message) use (&$failCallbackCalled) {
         $failCallbackCalled = true;
     };
-    
+
     $rule->validate('status', $toStatus, $fail);
-    
+
     expect($failCallbackCalled)->toBeFalse("Transition from {$fromStatus->value} to {$toStatus} should be valid");
 })->with([
     'pending to processing' => [OrderStatus::PENDING, OrderStatus::PROCESSING->value],
@@ -192,13 +192,13 @@ test('all invalid transitions fail validation', function (OrderStatus $fromStatu
     $this->order->update(['status' => $fromStatus]);
     $rule = new OrderStatusTransitionRule($this->order);
     $failMessage = null;
-    
+
     $fail = function ($message) use (&$failMessage) {
         $failMessage = $message;
     };
-    
+
     $rule->validate('status', $toStatus, $fail);
-    
+
     expect($failMessage)->not()->toBeNull("Transition from {$fromStatus->value} to {$toStatus} should be invalid");
     expect($failMessage)->toBe("The order cannot transition to the status '{$toStatus}'.");
 })->with([

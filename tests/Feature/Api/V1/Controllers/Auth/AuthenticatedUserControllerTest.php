@@ -124,7 +124,7 @@ describe('AuthenticatedUserController', function () {
                 ]);
 
             $userData = $response->json('user');
-            
+
             expect($userData['id'])->toBeInt();
             expect($userData['name'])->toBeString();
             expect($userData['email'])->toBeString();

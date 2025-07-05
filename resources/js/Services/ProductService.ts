@@ -9,7 +9,6 @@ import { BaseService } from './BaseService';
  * Extends BaseService to inherit common HTTP functionality.
  */
 class ProductService extends BaseService {
-
   /**
    * Fetch a paginated list of products
    *

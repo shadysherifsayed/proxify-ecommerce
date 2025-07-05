@@ -48,7 +48,7 @@ describe('OrderController', function () {
             // Verify only user's orders are returned
             $returnedOrderIds = collect($response->json('orders'))->pluck('id');
             $userOrderIds = $userOrders->pluck('id');
-            
+
             expect($returnedOrderIds->sort()->values())
                 ->toEqual($userOrderIds->sort()->values());
         });

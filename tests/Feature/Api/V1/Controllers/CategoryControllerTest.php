@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\Api\V1\Controllers;
 
-use App\Models\User;
-use App\Models\Product;
 use App\Models\Category;
+use App\Models\Product;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
@@ -37,21 +37,21 @@ describe('CategoryController', function () {
                             'name',
                             'created_at',
                             'updated_at',
-                            'products_count'
-                        ]
-                    ]
+                            'products_count',
+                        ],
+                    ],
                 ]);
 
             $categories = $response->json('categories');
-            
+
             // Verify all categories are returned
             expect($categories)->toHaveCount(3);
-            
+
             // Find and verify each category's products count
             $electronicsCategory = collect($categories)->firstWhere('name', 'Electronics');
             $booksCategory = collect($categories)->firstWhere('name', 'Books');
             $clothingCategory = collect($categories)->firstWhere('name', 'Clothing');
-            
+
             expect($electronicsCategory['products_count'])->toBe(3);
             expect($booksCategory['products_count'])->toBe(2);
             expect($clothingCategory['products_count'])->toBe(0);
@@ -63,7 +63,7 @@ describe('CategoryController', function () {
 
             $response->assertStatus(200)
                 ->assertJson([
-                    'categories' => []
+                    'categories' => [],
                 ]);
         });
 
@@ -86,7 +86,7 @@ describe('CategoryController', function () {
 
             $categories = $response->json('categories');
             expect($categories)->toHaveCount(3);
-            
+
             // Verify order based on creation order (assuming default ordering by id)
             expect($categories[0]['name'])->toBe('First Category');
             expect($categories[1]['name'])->toBe('Second Category');
@@ -109,7 +109,7 @@ describe('CategoryController', function () {
             $response->assertStatus(200);
 
             $categories = $response->json('categories');
-            
+
             foreach ($categories as $category) {
                 switch ($category['name']) {
                     case 'Category with Many Products':
@@ -136,9 +136,9 @@ describe('CategoryController', function () {
 
             $categories = $response->json('categories');
             expect($categories)->toHaveCount(1);
-            
+
             $categoryData = $categories[0];
-            
+
             // Verify data types
             expect($categoryData['id'])->toBeInt();
             expect($categoryData['name'])->toBeString();
@@ -152,18 +152,18 @@ describe('CategoryController', function () {
             Category::factory()->count(100)->create();
 
             $startTime = microtime(true);
-            
+
             $response = $this->actingAs($this->user, 'sanctum')
                 ->getJson('/api/v1/categories');
-            
+
             $endTime = microtime(true);
             $executionTime = $endTime - $startTime;
 
             $response->assertStatus(200);
-            
+
             // Ensure response time is reasonable (less than 2 seconds)
             expect($executionTime)->toBeLessThan(2.0);
-            
+
             // Verify all categories are returned
             $categories = $response->json('categories');
             expect($categories)->toHaveCount(100);
@@ -194,14 +194,14 @@ describe('CategoryController', function () {
 
             $categories = $response->json('categories');
             expect($categories)->toHaveCount(1);
-            
+
             $categoryData = $categories[0];
-            
+
             // Verify all expected fields are present
             expect($categoryData)->toHaveKeys([
-                'id', 'name', 'created_at', 'updated_at', 'products_count'
+                'id', 'name', 'created_at', 'updated_at', 'products_count',
             ]);
-            
+
             // Verify field values are not null or empty where applicable
             expect($categoryData['id'])->not->toBeNull();
             expect($categoryData['name'])->not->toBeEmpty();
@@ -239,7 +239,7 @@ describe('CategoryController', function () {
                 'Toys & Games (Kids)',
                 'Health & Beauty',
                 'Home & Garden',
-                'Sports & Outdoors'
+                'Sports & Outdoors',
             ];
 
             foreach ($specialNames as $name) {
@@ -253,9 +253,9 @@ describe('CategoryController', function () {
 
             $categories = $response->json('categories');
             expect($categories)->toHaveCount(count($specialNames));
-            
+
             $returnedNames = collect($categories)->pluck('name')->toArray();
-            
+
             foreach ($specialNames as $name) {
                 expect($returnedNames)->toContain($name);
             }
@@ -265,27 +265,27 @@ describe('CategoryController', function () {
             // Create categories with many products each
             $category1 = Category::factory()->create(['name' => 'Popular Category 1']);
             $category2 = Category::factory()->create(['name' => 'Popular Category 2']);
-            
+
             Product::factory()->count(50)->create(['category_id' => $category1->id]);
             Product::factory()->count(75)->create(['category_id' => $category2->id]);
 
             $startTime = microtime(true);
-            
+
             $response = $this->actingAs($this->user, 'sanctum')
                 ->getJson('/api/v1/categories');
-            
+
             $endTime = microtime(true);
             $executionTime = $endTime - $startTime;
 
             $response->assertStatus(200);
-            
+
             // Ensure response time is reasonable even with many products
             expect($executionTime)->toBeLessThan(1.0);
-            
+
             $categories = $response->json('categories');
             $category1Data = collect($categories)->firstWhere('name', 'Popular Category 1');
             $category2Data = collect($categories)->firstWhere('name', 'Popular Category 2');
-            
+
             expect($category1Data['products_count'])->toBe(50);
             expect($category2Data['products_count'])->toBe(75);
         });

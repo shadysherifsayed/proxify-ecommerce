@@ -43,7 +43,7 @@ describe('RegisterController', function () {
                 'name' => 'John Doe',
                 'email' => 'john@example.com',
             ]);
-            
+
             // Verify password was hashed and can be verified
             $user = User::where('email', 'john@example.com')->first();
             expect(Hash::check('Password123!', $user->getAuthPassword()))->toBeTrue();

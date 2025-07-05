@@ -8,7 +8,7 @@ class OrderProduct extends Pivot
 {
     /**
      * The attributes that should be cast to native types.
-     * 
+     *
      * Automatically converts database values to appropriate PHP types:
      * - price: Stored as decimal, cast to float for calculations
      * - quantity: Stored as integer

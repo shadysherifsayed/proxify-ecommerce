@@ -13,7 +13,7 @@ This Docker configuration provides a complete development environment for the Sh
 - `phpmyadmin`: Database management interface
 
 ## Ports
-- **8000**: Main application (http://localhost:8000)
+- **8000**: Main application (http://localhost:8000) 
 - **8080**: phpMyAdmin (http://localhost:8080)
 - **3306**: MySQL database
 
@@ -40,8 +40,8 @@ This Docker configuration provides a complete development environment for the Sh
    # Run migrations
    docker-compose exec app php artisan migrate
    
-   # Seed database (optional)
-   docker-compose exec app php artisan db:seed
+   # Sync products
+   docker-compose exec app php artisan sync:products
    ```
 
 4. **Access the application:**

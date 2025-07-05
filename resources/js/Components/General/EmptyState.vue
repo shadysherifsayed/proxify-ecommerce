@@ -19,12 +19,7 @@ withDefaults(
 
 <template>
   <div class="text-center py-12">
-    <v-icon
-      :icon="icon"
-      size="80"
-      color="grey-lighten-1"
-      class="mb-4"
-    />
+    <v-icon :icon="icon" size="80" color="grey-lighten-1" class="mb-4" />
     <h2 class="text-h5 font-weight-medium mb-2 text-grey-darken-1">
       {{ title }}
     </h2>

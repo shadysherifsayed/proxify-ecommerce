@@ -1,11 +1,8 @@
 import Login from '@/Pages/Auth/Login.vue';
 import { useAuthStore } from '@/Stores/auth';
-import { setupAuthMocks } from '@/Tests/Helpers/mocks';
 import { shallowMount } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-
-setupAuthMocks();
 
 describe('Login.vue', () => {
   let pinia: any;

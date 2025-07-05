@@ -19,9 +19,7 @@ const rules = ref({
     (value: string) => !!value || 'Email is required',
     (value: string) => validateEmail(value) || 'Email must be valid',
   ],
-  password: [
-    (value: string) => !!value || 'Password is required',
-  ],
+  password: [(value: string) => !!value || 'Password is required'],
 });
 
 const isSubmitting = ref(false);
@@ -50,11 +48,7 @@ async function login() {
   <AuthLayout>
     <v-card-title class="text-h5 text-center">Login</v-card-title>
     <v-card-text>
-      <v-form
-        ref="formRef"
-        validate-on="submit"
-        autocomplete="off"
-      >
+      <v-form ref="formRef" validate-on="submit" autocomplete="off">
         <v-label> Email </v-label>
         <v-text-field
           type="email"

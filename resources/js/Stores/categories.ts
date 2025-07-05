@@ -3,7 +3,6 @@ import { Category } from '@/Types/entities';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
-
 export const useCategoriesStore = defineStore('categories', () => {
   const categories = ref<Category[]>([]);
   const isLoading = ref(false);

@@ -58,8 +58,13 @@ export const useProductsStore = defineStore('products', () => {
       isUpdating.value = true;
       const response = await ProductService.updateProduct(productId, data);
       product.value = response.product;
+      // Update the products list if the product is in it
+      const index = products.value.findIndex((p) => p.id === productId);
+      if (index !== -1) {
+        products.value[index] = response.product;
+      }
+      return response.product; // Return the updated product
     } catch (error) {
-      console.error('Error updating product:', error);
       throw error; // Re-throw to handle in the component
     } finally {
       isUpdating.value = false;
@@ -74,6 +79,12 @@ export const useProductsStore = defineStore('products', () => {
         imageFile,
       );
       product.value = response.product;
+      // Update the products list if the product is in it
+      const index = products.value.findIndex((p) => p.id === productId);
+      if (index !== -1) {
+        products.value[index] = response.product;
+      }
+      return response.product; // Return the updated product
     } catch (error) {
       console.error('Error uploading product image:', error);
       throw error; // Re-throw to handle in the component

@@ -2,9 +2,9 @@
 
 namespace App\Rules\Order;
 
-use Closure;
-use App\Models\Order;
 use App\Enums\OrderStatus;
+use App\Models\Order;
+use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 
 class OrderStatusTransitionRule implements ValidationRule

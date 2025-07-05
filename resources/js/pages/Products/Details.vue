@@ -15,7 +15,9 @@ const route = useRoute();
 
 const error = ref<string | null>(null);
 const editMode = ref(false);
-const productData = ref<Pick<Product, 'title' | 'description' | 'price' | 'category_id'>>({
+const productData = ref<
+  Pick<Product, 'title' | 'description' | 'price' | 'category_id'>
+>({
   title: '',
   description: '',
   price: 0,

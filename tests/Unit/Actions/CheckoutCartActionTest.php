@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    $this->checkoutCartAction = new CheckoutCartAction();
+    $this->checkoutCartAction = new CheckoutCartAction;
 });
 
 test('can be instantiated', function () {

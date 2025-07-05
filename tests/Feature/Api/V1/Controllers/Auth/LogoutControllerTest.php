@@ -25,7 +25,7 @@ describe('LogoutController', function () {
         test('deletes current access token', function () {
             // Create a token for the user
             $token = $this->user->createToken('test-token');
-            
+
             // Use the token to authenticate
             $response = $this->withHeaders([
                 'Authorization' => "Bearer {$token->plainTextToken}",
@@ -43,7 +43,7 @@ describe('LogoutController', function () {
             // Create multiple tokens for the user
             $token1 = $this->user->createToken('token-1');
             $token2 = $this->user->createToken('token-2');
-            
+
             // Create token for another user
             $otherUser = User::factory()->create();
             $otherToken = $otherUser->createToken('other-token');
@@ -91,7 +91,7 @@ describe('LogoutController', function () {
 
         test('can logout with different token formats', function () {
             $token = $this->user->createToken('test-token');
-            
+
             // Test with Bearer prefix (case insensitive)
             $response = $this->withHeaders([
                 'Authorization' => "bearer {$token->plainTextToken}",

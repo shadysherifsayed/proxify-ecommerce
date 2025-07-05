@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-
 const searchQuery = defineModel<string>('');
 
 const statusFilter = defineModel<string | null>('');

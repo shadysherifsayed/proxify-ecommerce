@@ -2,7 +2,7 @@ import axios, { AxiosInstance } from 'axios';
 
 /**
  * BaseService
- * 
+ *
  * Abstract base class for all API services.
  * Provides common HTTP functionality including authentication,
  * error handling, and request/response interceptors.
@@ -12,7 +12,7 @@ export class BaseService {
 
   /**
    * Initialize the base service with axios client and interceptors
-   * 
+   *
    * Sets up:
    * - Base URL from environment variables
    * - Response interceptor for validation error handling
@@ -38,14 +38,14 @@ export class BaseService {
 
   /**
    * Send HTTP request to API endpoint
-   * 
+   *
    * @param {string} method - HTTP method (GET, POST, PATCH, DELETE, etc.)
    * @param {string} endpoint - API endpoint path
    * @param {any} [data] - Request data (body for POST/PATCH, query params for GET)
    * @param {Record<string, string>} [headers] - Additional headers to include
    * @returns {Promise<any>} Promise resolving to response data
    * @throws {Error} Throws error with validation errors attached for 422 responses
-   * 
+   *
    * @example
    */
   async send(
@@ -60,7 +60,7 @@ export class BaseService {
     };
 
     const token = this.getToken();
-    
+
     if (token) {
       headers.Authorization = `Bearer ${token}`;
     }
@@ -71,7 +71,7 @@ export class BaseService {
       endpoint += `?${params}`;
       data = undefined; // clear data for GET requests
     }
-    
+
     const response = await this.client.request({
       method,
       url: endpoint,
@@ -88,7 +88,7 @@ export class BaseService {
 
   /**
    * Get authentication token from localStorage
-   * 
+   *
    * @returns {string | null} JWT token if exists, null otherwise
    */
   getToken(): string | null {

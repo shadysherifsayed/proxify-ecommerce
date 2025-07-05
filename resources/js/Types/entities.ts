@@ -41,7 +41,9 @@ export interface Cart {
   products: CartProduct[];
 }
 
-export type OrderProduct = Product & { pivot: { quantity: number, price: number } };
+export type OrderProduct = Product & {
+  pivot: { quantity: number; price: number };
+};
 
 export interface Order {
   id: number;

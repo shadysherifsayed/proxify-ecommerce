@@ -39,7 +39,7 @@ export const useCartStore = defineStore('cart', () => {
     }
   }
 
-   async function clearCart() {
+  async function clearCart() {
     if (!cart.value) {
       return;
     }
@@ -54,12 +54,12 @@ export const useCartStore = defineStore('cart', () => {
     try {
       isCheckingOut.value = true;
       const order = await CartService.checkoutCart();
-      cart.value.products = []; 
+      cart.value.products = [];
       return order;
     } catch (error) {
       throw error;
     } finally {
-      isCheckingOut.value = false; 
+      isCheckingOut.value = false;
     }
   }
 
@@ -74,15 +74,15 @@ export const useCartStore = defineStore('cart', () => {
     const existingProduct = cart.value.products.find(
       (item) => item.id === product.id,
     );
-    
+
     if (!quantity && existingProduct) {
       quantity = existingProduct.pivot.quantity + 1; // Default to 1 if no quantity is specified
     } else if (!quantity) {
-      quantity = 1; // Default to 1 if no quantity is specified and product is not in cart 
+      quantity = 1; // Default to 1 if no quantity is specified and product is not in cart
     }
 
     await CartService.addToCart(product.id, quantity);
-    
+
     if (existingProduct) {
       existingProduct.pivot.quantity = quantity;
     } else {

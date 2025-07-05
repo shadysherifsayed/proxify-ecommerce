@@ -4,11 +4,16 @@ FROM php:8.2-fpm
 # Set working directory
 WORKDIR /var/www/html
 
+# Install Node.js
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs
+
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     git \
     curl \
     libpng-dev \
+    libjpeg-dev \
     libonig-dev \
     libxml2-dev \
     zip \
@@ -33,8 +38,14 @@ RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/storage \
     && chmod -R 755 /var/www/html/bootstrap/cache
 
-# Install dependencies
+# Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
+
+# Symlink storage directory
+RUN php artisan storage:link
+
+# Install Node.js dependencies and build assets
+RUN npm install && npm run build
 
 # Copy nginx configuration
 COPY docker/nginx/default.conf /etc/nginx/sites-available/default

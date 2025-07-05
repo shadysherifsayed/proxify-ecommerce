@@ -5,15 +5,14 @@ import { BaseService } from './BaseService';
 
 /**
  * AuthService
- * 
+ *
  * Service class for handling authentication-related API operations.
  * Manages user login, registration, logout, and token storage.
  */
 class AuthService extends BaseService {
-  
   /**
    * Get the current authenticated user's information
-   * 
+   *
    * @returns {Promise<{user: User}>} Promise resolving to current user data
    * @throws {Error} Throws error if user is not authenticated
    */
@@ -23,7 +22,7 @@ class AuthService extends BaseService {
 
   /**
    * Authenticate a user with email and password
-   * 
+   *
    * @param {LoginRequest} data - Login credentials
    * @param {string} data.email - User's email address
    * @param {string} data.password - User's password
@@ -36,9 +35,9 @@ class AuthService extends BaseService {
 
   /**
    * Log out the current user and clear stored token
-   * 
+   *
    * @returns {Promise<void>} Promise that resolves when logout is complete
-   * 
+   *
    */
   logout(): Promise<void> {
     localStorage.removeItem('token');
@@ -47,7 +46,7 @@ class AuthService extends BaseService {
 
   /**
    * Register a new user account
-   * 
+   *
    * @param {RegisterRequest} data - Registration data
    * @param {string} data.name - User's full name
    * @param {string} data.email - User's email address
@@ -62,7 +61,7 @@ class AuthService extends BaseService {
 
   /**
    * Store authentication token in localStorage
-   * 
+   *
    * @param {string} token - JWT authentication token
    */
   setToken(token: string) {

@@ -23,16 +23,20 @@ const modelValue = defineModel<{
 });
 
 // Initialize form data when product prop changes
-watch(() => props.product, (newProduct) => {
-  if (newProduct) {
-    modelValue.value = {
-      title: newProduct.title,
-      description: newProduct.description,
-      price: newProduct.price,
-      category_id: newProduct.category.id,
-    };
-  }
-}, { immediate: true });
+watch(
+  () => props.product,
+  (newProduct) => {
+    if (newProduct) {
+      modelValue.value = {
+        title: newProduct.title,
+        description: newProduct.description,
+        price: newProduct.price,
+        category_id: newProduct.category.id,
+      };
+    }
+  },
+  { immediate: true },
+);
 </script>
 
 <template>

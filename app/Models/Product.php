@@ -8,10 +8,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Product Model
- * 
+ *
  * Represents a product in the e-commerce system with category association,
  * pricing information, ratings, and image handling capabilities.
- * 
+ *
  * @property int $id The unique identifier for the product
  * @property string $title The product title/name
  * @property float $price The product price in decimal format
@@ -24,7 +24,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property \Illuminate\Support\Carbon $created_at Timestamp when the product was created
  * @property \Illuminate\Support\Carbon $updated_at Timestamp when the product was last updated
  * @property-read \App\Models\Category $category The category this product belongs to
- * 
+ *
  * @method static \Database\Factories\ProductFactory factory() Create a new factory instance for the model
  * @method static \Illuminate\Database\Eloquent\Builder|Product newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Product newQuery()
@@ -37,7 +37,7 @@ class Product extends Model
 
     /**
      * The attributes that are mass assignable.
-     * 
+     *
      * These fields can be filled using mass assignment methods like create() or fill().
      * Includes product details, pricing, rating information, and category association.
      *
@@ -51,12 +51,12 @@ class Product extends Model
         'rating',
         'reviews_count',
         'category_id',
-        'external_id'
+        'external_id',
     ];
 
     /**
      * The attributes that should be cast to native types.
-     * 
+     *
      * Automatically converts database values to appropriate PHP types:
      * - price: Stored as decimal, cast to float for calculations
      * - rating: Stored as decimal, cast to float for precision
@@ -72,10 +72,10 @@ class Product extends Model
 
     /**
      * Get the category that owns the product.
-     * 
+     *
      * Defines a many-to-one relationship where each product belongs to exactly one category.
      * This relationship is used for product categorization and filtering.
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Category, \App\Models\Product>
      */
     public function category(): BelongsTo
@@ -85,14 +85,13 @@ class Product extends Model
 
     /**
      * Get the formatted image URL for the product.
-     * 
+     *
      * This accessor automatically formats the image attribute to provide a complete URL.
      * If the stored value is already a full URL (external image), it returns as-is.
      * If it's a local path, it prepends the storage URL to create an accessible asset URL.
-     * 
-     * @param string $image The raw image path or URL from the database
+     *
+     * @param  string  $image  The raw image path or URL from the database
      * @return string The formatted, accessible image URL
-     * 
      */
     public function getImageAttribute(string $image): string
     {

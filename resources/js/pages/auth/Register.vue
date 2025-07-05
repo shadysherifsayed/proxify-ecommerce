@@ -72,11 +72,7 @@ async function register() {
   <AuthLayout>
     <v-card-title class="text-h5 text-center">Register</v-card-title>
     <v-card-text>
-      <v-form
-        ref="formRef"
-        validate-on="submit"
-        autocomplete="off"
-      >
+      <v-form ref="formRef" validate-on="submit" autocomplete="off">
         <v-label> Name </v-label>
         <v-text-field
           required

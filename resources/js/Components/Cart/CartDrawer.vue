@@ -9,8 +9,8 @@ const modelValue = defineModel<boolean>({
 });
 
 const cartStore = useCartStore();
-const { cartProducts, cartTotal, cartCount, isCheckingOut } = storeToRefs(cartStore);
-
+const { cartProducts, cartTotal, cartCount, isCheckingOut } =
+  storeToRefs(cartStore);
 </script>
 
 <template>
@@ -50,7 +50,10 @@ const { cartProducts, cartTotal, cartCount, isCheckingOut } = storeToRefs(cartSt
             "
           />
         </v-list>
-        <div v-if="cartCount === 0" class="d-flex flex-column justify-center align-center">
+        <div
+          v-if="cartCount === 0"
+          class="d-flex flex-column justify-center align-center"
+        >
           <v-icon
             icon="mdi-cart-outline"
             size="48"

@@ -11,7 +11,7 @@ uses(RefreshDatabase::class);
 
 beforeEach(function () {
     // Create the action with a real ProductClient but fake HTTP responses
-    $this->syncProductsAction = new SyncProductsAction(new ProductClient());
+    $this->syncProductsAction = new SyncProductsAction(new ProductClient);
 });
 
 test('can be instantiated with product client', function () {
@@ -20,10 +20,10 @@ test('can be instantiated with product client', function () {
 
 test('throws exception when api request fails', function () {
     Http::fake([
-        '*' => Http::response(null, 500)
+        '*' => Http::response(null, 500),
     ]);
 
-    expect(fn() => $this->syncProductsAction->execute())
+    expect(fn () => $this->syncProductsAction->execute())
         ->toThrow(Exception::class, 'Failed to fetch products from FakeStore API');
 });
 
@@ -38,8 +38,8 @@ test('syncs products successfully with valid api response', function () {
             'category' => 'electronics',
             'rating' => [
                 'rate' => 4.5,
-                'count' => 120
-            ]
+                'count' => 120,
+            ],
         ],
         [
             'id' => 2,
@@ -50,13 +50,13 @@ test('syncs products successfully with valid api response', function () {
             'category' => 'clothing',
             'rating' => [
                 'rate' => 4.0,
-                'count' => 85
-            ]
-        ]
+                'count' => 85,
+            ],
+        ],
     ];
 
     Http::fake([
-        '*' => Http::response($apiProducts, 200)
+        '*' => Http::response($apiProducts, 200),
     ]);
 
     $this->syncProductsAction->execute();
@@ -78,7 +78,7 @@ test('syncs products successfully with valid api response', function () {
         'image' => 'https://example.com/image1.jpg',
         'rating' => 4.5,
         'reviews_count' => 120,
-        'category_id' => $electronicsCategory->id
+        'category_id' => $electronicsCategory->id,
     ]);
 
     $this->assertDatabaseHas('products', [
@@ -89,7 +89,7 @@ test('syncs products successfully with valid api response', function () {
         'image' => 'https://example.com/image2.jpg',
         'rating' => 4.0,
         'reviews_count' => 85,
-        'category_id' => $clothingCategory->id
+        'category_id' => $clothingCategory->id,
     ]);
 });
 
@@ -100,7 +100,7 @@ test('updates existing product when external id exists', function () {
         'external_id' => 1,
         'title' => 'Old Title',
         'price' => 50.00,
-        'category_id' => $category->id
+        'category_id' => $category->id,
     ]);
 
     $apiProducts = [
@@ -113,13 +113,13 @@ test('updates existing product when external id exists', function () {
             'category' => 'electronics',
             'rating' => [
                 'rate' => 4.8,
-                'count' => 200
-            ]
-        ]
+                'count' => 200,
+            ],
+        ],
     ];
 
     Http::fake([
-        '*' => Http::response($apiProducts, 200)
+        '*' => Http::response($apiProducts, 200),
     ]);
 
     $this->syncProductsAction->execute();
@@ -148,13 +148,13 @@ test('creates new category if not exists', function () {
             'category' => 'new-category',
             'rating' => [
                 'rate' => 4.5,
-                'count' => 100
-            ]
-        ]
+                'count' => 100,
+            ],
+        ],
     ];
 
     Http::fake([
-        '*' => Http::response($apiProducts, 200)
+        '*' => Http::response($apiProducts, 200),
     ]);
 
     // Verify category doesn't exist before sync
@@ -185,8 +185,8 @@ test('reuses existing category', function () {
             'category' => 'electronics',
             'rating' => [
                 'rate' => 4.5,
-                'count' => 100
-            ]
+                'count' => 100,
+            ],
         ],
         [
             'id' => 2,
@@ -197,13 +197,13 @@ test('reuses existing category', function () {
             'category' => 'electronics',
             'rating' => [
                 'rate' => 4.2,
-                'count' => 75
-            ]
-        ]
+                'count' => 75,
+            ],
+        ],
     ];
 
     Http::fake([
-        '*' => Http::response($apiProducts, 200)
+        '*' => Http::response($apiProducts, 200),
     ]);
 
     $this->syncProductsAction->execute();
@@ -230,7 +230,7 @@ test('handles products with missing rating data', function () {
             'price' => 99.99,
             'description' => 'Test description',
             'image' => 'https://example.com/image.jpg',
-            'category' => 'electronics'
+            'category' => 'electronics',
             // No rating data
         ],
         [
@@ -241,14 +241,14 @@ test('handles products with missing rating data', function () {
             'image' => 'https://example.com/image.jpg',
             'category' => 'electronics',
             'rating' => [
-                'rate' => 4.5
+                'rate' => 4.5,
                 // Missing count
-            ]
-        ]
+            ],
+        ],
     ];
 
     Http::fake([
-        '*' => Http::response($apiProducts, 200)
+        '*' => Http::response($apiProducts, 200),
     ]);
 
     $this->syncProductsAction->execute();
@@ -268,7 +268,7 @@ test('handles empty products response', function () {
     $apiProducts = [];
 
     Http::fake([
-        '*' => Http::response($apiProducts, 200)
+        '*' => Http::response($apiProducts, 200),
     ]);
 
     // Should not throw any exception
@@ -288,7 +288,7 @@ test('syncs multiple products with different categories', function () {
             'description' => 'Electronics description',
             'image' => 'https://example.com/electronics.jpg',
             'category' => 'electronics',
-            'rating' => ['rate' => 4.5, 'count' => 120]
+            'rating' => ['rate' => 4.5, 'count' => 120],
         ],
         [
             'id' => 2,
@@ -297,7 +297,7 @@ test('syncs multiple products with different categories', function () {
             'description' => 'Clothing description',
             'image' => 'https://example.com/clothing.jpg',
             'category' => 'clothing',
-            'rating' => ['rate' => 4.0, 'count' => 85]
+            'rating' => ['rate' => 4.0, 'count' => 85],
         ],
         [
             'id' => 3,
@@ -306,12 +306,12 @@ test('syncs multiple products with different categories', function () {
             'description' => 'Book description',
             'image' => 'https://example.com/book.jpg',
             'category' => 'books',
-            'rating' => ['rate' => 4.8, 'count' => 200]
-        ]
+            'rating' => ['rate' => 4.8, 'count' => 200],
+        ],
     ];
 
     Http::fake([
-        '*' => Http::response($apiProducts, 200)
+        '*' => Http::response($apiProducts, 200),
     ]);
 
     $this->syncProductsAction->execute();
@@ -350,13 +350,13 @@ test('handles products with numeric string prices', function () {
             'category' => 'electronics',
             'rating' => [
                 'rate' => '4.5', // String rating
-                'count' => '120' // String count
-            ]
-        ]
+                'count' => '120', // String count
+            ],
+        ],
     ];
 
     Http::fake([
-        '*' => Http::response($apiProducts, 200)
+        '*' => Http::response($apiProducts, 200),
     ]);
 
     $this->syncProductsAction->execute();
@@ -375,12 +375,12 @@ test('preserves existing products not in api response', function () {
     $existingProduct1 = Product::factory()->create([
         'external_id' => 100,
         'title' => 'Existing Product 1',
-        'category_id' => $category->id
+        'category_id' => $category->id,
     ]);
     $existingProduct2 = Product::factory()->create([
         'external_id' => 200,
         'title' => 'Existing Product 2',
-        'category_id' => $category->id
+        'category_id' => $category->id,
     ]);
 
     // API response only contains new products
@@ -392,12 +392,12 @@ test('preserves existing products not in api response', function () {
             'description' => 'New description',
             'image' => 'https://example.com/image.jpg',
             'category' => 'electronics',
-            'rating' => ['rate' => 4.5, 'count' => 100]
-        ]
+            'rating' => ['rate' => 4.5, 'count' => 100],
+        ],
     ];
 
     Http::fake([
-        '*' => Http::response($apiProducts, 200)
+        '*' => Http::response($apiProducts, 200),
     ]);
 
     $this->syncProductsAction->execute();
@@ -405,17 +405,17 @@ test('preserves existing products not in api response', function () {
     // Verify existing products are preserved
     $this->assertDatabaseHas('products', [
         'external_id' => 100,
-        'title' => 'Existing Product 1'
+        'title' => 'Existing Product 1',
     ]);
     $this->assertDatabaseHas('products', [
         'external_id' => 200,
-        'title' => 'Existing Product 2'
+        'title' => 'Existing Product 2',
     ]);
 
     // Verify new product was added
     $this->assertDatabaseHas('products', [
         'external_id' => 1,
-        'title' => 'New Product'
+        'title' => 'New Product',
     ]);
 
     // Total should be 3 products
@@ -424,9 +424,9 @@ test('preserves existing products not in api response', function () {
 
 test('handles network errors gracefully', function () {
     Http::fake([
-        '*' => Http::response(null, 500)
+        '*' => Http::response(null, 500),
     ]);
 
-    expect(fn() => $this->syncProductsAction->execute())
+    expect(fn () => $this->syncProductsAction->execute())
         ->toThrow(Exception::class, 'Failed to fetch products from FakeStore API');
 });

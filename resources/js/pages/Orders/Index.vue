@@ -1,3 +1,29 @@
+<script setup lang="ts">
+import SpinnerLoader from '@/Components/General/SpinnerLoader.vue';
+import OrdersList from '@/Components/Orders/OrdersList.vue';
+import OrdersSummary from '@/Components/Orders/OrdersSummary.vue';
+import MainLayout from '@/Layouts/MainLayout.vue';
+import { useOrdersStore } from '@/Stores/orders';
+import { Order } from '@/Types/entities';
+import { storeToRefs } from 'pinia';
+import { onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+const ordersStore = useOrdersStore();
+const { orders, isLoading, ordersCount, totalSpent } = storeToRefs(ordersStore);
+
+function updateOrder(orderId: number, data: Partial<Order>) {
+  ordersStore.updateOrder(orderId, data);
+}
+
+function viewOrder(orderId: number) {
+  router.push(`/orders/${orderId}`);
+}
+
+onMounted(() => ordersStore.fetchOrders());
+</script>
+
 <template>
   <main-layout>
     <v-container class="py-6">
@@ -37,30 +63,3 @@
     </v-container>
   </main-layout>
 </template>
-
-<script setup lang="ts">
-import OrdersList from '@/Components/Orders/OrdersList.vue';
-import OrdersSummary from '@/Components/Orders/OrdersSummary.vue';
-import SpinnerLoader from '@/Components/General/SpinnerLoader.vue';
-import MainLayout from '@/Layouts/MainLayout.vue';
-import { useOrdersStore } from '@/Stores/orders';
-import { Order } from '@/Types/entities';
-import { storeToRefs } from 'pinia';
-import { onMounted } from 'vue';
-import { useRouter } from 'vue-router';
-
-const router = useRouter();
-const ordersStore = useOrdersStore();
-const { orders, isLoading, ordersCount, totalSpent } = storeToRefs(ordersStore);
-
-function updateOrder(orderId: number, data: Partial<Order>) {
-  ordersStore.updateOrder(orderId, data);
-}
-
-function viewOrder(orderId: number) {
-  console.log(`Viewing details for order ${orderId}`);
-  router.push(`/orders/${orderId}`);
-}
-
-onMounted(() => ordersStore.fetchOrders());
-</script>

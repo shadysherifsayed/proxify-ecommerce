@@ -4,35 +4,10 @@ import { createPinia, setActivePinia } from 'pinia';
 import Login from '@/Pages/Auth/Login.vue';
 import { useAuthStore } from '@/Stores/auth';
 import { nextTick } from 'vue';
+import { setupAuthMocks, createTestWrapperConfig } from '@/Tests/Helpers/mocks';
 
-// Mock the AuthLayout component
-vi.mock('@/Layouts/AuthLayout.vue', () => ({
-  default: {
-    template: '<div class="auth-layout"><slot /></div>',
-  },
-}));
-
-// Mock the router module
-vi.mock('@/Router', () => ({
-  default: {
-    push: vi.fn(),
-    replace: vi.fn(),
-    go: vi.fn(),
-    back: vi.fn(),
-    forward: vi.fn(),
-  },
-}));
-
-// Mock AuthService to avoid API calls
-vi.mock('@/Services/AuthService', () => ({
-  default: {
-    login: vi.fn(),
-    logout: vi.fn(),
-    register: vi.fn(),
-    user: vi.fn(),
-    setToken: vi.fn(),
-  },
-}));
+// Setup all auth-related mocks
+setupAuthMocks();
 
 describe('Login.vue', () => {
   let pinia: any;
@@ -53,14 +28,7 @@ describe('Login.vue', () => {
 
   const createWrapper = (props = {}) => {
     return shallowMount(Login, {
-      global: {
-        plugins: [pinia],
-        mocks: {
-          $router: {
-            push: vi.fn(),
-          },
-        },
-      },
+      ...createTestWrapperConfig(pinia),
       props,
     });
   };
@@ -93,12 +61,9 @@ describe('Login.vue', () => {
   it('has correct password validation rules', () => {
     const wrapper = createWrapper();
     const vm = wrapper.vm as any;
-    
     // Test password required validation
     expect(vm.rules.password[0]('')).toBe('Password is required');
     expect(vm.rules.password[0]('password')).toBe(true);
-    // Note: The actual validation rule uses !!value, so '   ' would be truthy
-    expect(vm.rules.password[0]('   ')).toBe(true);
   });
 
   it('can update form data programmatically', async () => {

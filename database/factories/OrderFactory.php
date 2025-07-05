@@ -27,9 +27,9 @@ class OrderFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'total_price' => $this->faker->randomFloat(2, 10, 500),
-            'status' => $this->faker->randomElement(['pending', 'processing', 'completed', 'cancelled']),
-            'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
+            'total_price' => fake()->randomFloat(2, 10, 500),
+            'status' => fake()->randomElement(['pending', 'processing', 'completed', 'cancelled']),
+            'created_at' => now(),
         ];
     }
 

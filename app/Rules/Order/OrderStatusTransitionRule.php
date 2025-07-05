@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Rules;
+namespace App\Rules\Order;
 
-use App\Enums\OrderStatus;
-use App\Models\Order;
 use Closure;
+use App\Models\Order;
+use App\Enums\OrderStatus;
 use Illuminate\Contracts\Validation\ValidationRule;
 
 class OrderStatusTransitionRule implements ValidationRule
@@ -20,7 +20,7 @@ class OrderStatusTransitionRule implements ValidationRule
     /**
      * Run the validation rule.
      *
-     * @param  \Closure(string, ?string=): \Illuminate\Translation\PotentiallyTranslatedString  $fail
+     * @param  \Closure(string, ?string=): \Illuminate\Translation\PotentiallyTransl        atedString  $fail
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {

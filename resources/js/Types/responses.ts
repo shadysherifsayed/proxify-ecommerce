@@ -1,5 +1,10 @@
 import { Product, User } from "./entities";
 
+export interface ListMeta {
+    is_fetched: boolean;
+    pagination: Pagination | null;
+}
+
 export interface Pagination {
     next: string | null;
     prev: string | null;

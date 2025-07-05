@@ -9,11 +9,11 @@ import { storeToRefs } from 'pinia';
 import { onMounted } from 'vue';
 
 const productsStore = useProductsStore();
-const { products, isLoading } = storeToRefs(productsStore);
+const { products, productsMeta, isLoading, hasMore } = storeToRefs(productsStore);
 
 const cartStore = useCartStore();
 
-onMounted(() => productsStore.fetchProducts());
+onMounted(() => productsMeta.value?.is_fetched || productsStore.fetchProducts());
 </script>
 
 <template>
@@ -22,6 +22,8 @@ onMounted(() => productsStore.fetchProducts());
       class="mt-8"
       :products="products"
       :is-loading="isLoading"
+      :has-more="hasMore"
+      @load-more="productsStore.fetchProducts"
       @view-product="
         (product: Product) =>
           router.push({ name: 'products.show', params: { id: product.id } })

@@ -4,8 +4,8 @@ import { BaseService } from './BaseService';
 
 class ProductService extends BaseService {
 
-  fetchProducts(): Promise<ProductListResponse> {
-    return this.send('GET', 'products');
+  fetchProducts(params: any = {}): Promise<ProductListResponse> {
+    return this.send('GET', 'products', params);
   }
 
 

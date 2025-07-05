@@ -4,8 +4,8 @@ import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 
 export const useOrdersStore = defineStore('orders', () => {
-  const orders = ref<Order[]>([]);
   const order = ref<Order | null>(null);
+  const orders = ref<Order[]>([]);
   const isLoading = ref(false);
 
   const ordersCount = computed(() => orders.value.length);
@@ -19,8 +19,6 @@ export const useOrdersStore = defineStore('orders', () => {
       isLoading.value = true;
       const response = await OrderService.fetchOrders();
       orders.value = response.orders;
-    } catch (err) {
-      console.error('Error fetching orders:', err);
     } finally {
       isLoading.value = false;
     }

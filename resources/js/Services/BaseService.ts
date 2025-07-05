@@ -37,6 +37,13 @@ export class BaseService {
       headers.Authorization = `Bearer ${token}`;
     }
 
+    // send data as query parameters for GET requests
+    if (method.toUpperCase() === 'GET' && data) {
+      const params = new URLSearchParams(data).toString();
+      endpoint += `?${params}`;
+      data = undefined; // clear data for GET requests
+    }
+    
     const response = await this.client.request({
       method,
       url: endpoint,

@@ -46,6 +46,7 @@ const emit = defineEmits<{
           size="small"
           color="error"
           variant="text"
+          data-testid="remove-btn"
           @click="emit('remove')"
         />
       </div>
@@ -57,6 +58,7 @@ const emit = defineEmits<{
             size="small"
             variant="outlined"
             :disabled="product.pivot.quantity <= 1"
+            data-testid="decrease-btn"
             @click="emit('decrease')"
           />
           <span class="mx-3 text-h6 font-weight-medium">
@@ -66,6 +68,7 @@ const emit = defineEmits<{
             icon="mdi-plus"
             size="small"
             variant="outlined"
+            data-testid="increase-btn"
             @click="emit('increase')"
           />
         </div>

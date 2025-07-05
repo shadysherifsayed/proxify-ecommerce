@@ -76,6 +76,7 @@ const { cartProducts, cartTotal, cartCount, isCheckingOut } = storeToRefs(cartSt
               color="error"
               size="small"
               prepend-icon="mdi-delete-sweep"
+              data-testid="clear-cart-btn"
               @click="cartStore.clearCart"
             >
               Clear Cart
@@ -105,6 +106,7 @@ const { cartProducts, cartTotal, cartCount, isCheckingOut } = storeToRefs(cartSt
               :loading="isCheckingOut"
               prepend-icon="mdi-credit-card"
               class="text-none font-weight-bold"
+              data-testid="checkout-btn"
               @click="cartStore.checkoutCart"
             >
               Proceed to Checkout

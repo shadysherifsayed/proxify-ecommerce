@@ -22,14 +22,14 @@ const cartDrawer = defineModel<boolean>('cartDrawer', { default: false });
       prepend-icon="mdi-view-dashboard-outline"
       title="Shop"
       link
-      to="/"
+      :to="{ name: 'products.index' }"
     />
     <v-list-item
       class="text-none"
       prepend-icon="mdi-package-variant"
       title="Orders"
       link
-      to="/orders"
+      :to="{ name: 'orders.index' }"
     />
     <v-spacer />
     <template #append>
@@ -54,8 +54,8 @@ const cartDrawer = defineModel<boolean>('cartDrawer', { default: false });
       <v-btn
         height="48"
         color="grey-darken-2"
-        @click="isDarkMode = !isDarkMode"
         :icon="!isDarkMode ? 'mdi-moon-waning-crescent' : 'mdi-weather-sunny'"
+        @click="isDarkMode = !isDarkMode"
       />
 
       <v-btn

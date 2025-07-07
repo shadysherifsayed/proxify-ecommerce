@@ -299,6 +299,8 @@ docker-compose exec app npm run dev
 - **Main Application**: http://localhost:8000
 - **PHPMyAdmin**: http://localhost:8080
 - **Vite Dev Server**: http://localhost:5174 (for hot reloading)
+- **Laravel Telescope**: http://localhost:8000/telescope
+- **Laravel Pulse**: http://localhost:8000/pulse
 
 #### PHPMyAdmin Login:
 - **Username**: `root` or `shadelane`

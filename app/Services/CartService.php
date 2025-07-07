@@ -2,10 +2,12 @@
 
 namespace App\Services;
 
-use App\Managers\Cache\CartCacheManager;
 use App\Models\Cart;
-use App\Models\Product;
 use App\Models\User;
+use App\Models\Product;
+use Illuminate\Support\Facades\DB;
+use App\Managers\Cache\CartCacheManager;
+use App\Exceptions\Cart\CartOperationFailedException;
 
 class CartService
 {
@@ -33,19 +35,27 @@ class CartService
      * @param  \App\Models\User  $user  The user to add product to cart for
      * @param  \App\Models\Product  $product  The product to add to the cart
      * @param  int  $quantity  The quantity of the product to add
+     * @throws CartOperationFailedException When the cart operation fails
      */
     public function addProduct(User $user, Product $product, int $quantity): void
     {
-        $cart = $user->cart()->firstOrCreate();
+        try {
+            DB::transaction(function () use ($user, $product, $quantity) {
+                // Use lockForUpdate to prevent concurrent modifications
+                $cart = $user->cart()->lockForUpdate()->firstOrCreate();
 
-        $cart->products()->syncWithoutDetaching([
-            $product->id => [
-                'quantity' => $quantity,
-            ],
-        ]);
+                $cart->products()->syncWithoutDetaching([
+                    $product->id => [
+                        'quantity' => $quantity,
+                    ],
+                ]);
+            });
 
-        // Invalidate cart cache
-        $this->cartCacheManager->invalidateCartCache($user->id);
+            // Invalidate cart cache after successful transaction
+            $this->cartCacheManager->invalidateCartCache($user->id);
+        } catch (\Exception $e) {
+            throw new CartOperationFailedException('Failed to add product to cart: ' . $e->getMessage(), 0, $e);
+        }
     }
 
     /**
@@ -53,29 +63,45 @@ class CartService
      *
      * @param  \App\Models\User  $user  The user to remove product from cart for
      * @param  \App\Models\Product  $product  The product to remove from the cart
+     * @throws CartOperationFailedException When the cart operation fails
      */
     public function removeProduct(User $user, Product $product): void
     {
-        $cart = $user->cart()->firstOrCreate();
+        try {
+            DB::transaction(function () use ($user, $product) {
+                // Use lockForUpdate to prevent concurrent modifications
+                $cart = $user->cart()->lockForUpdate()->firstOrCreate();
 
-        $cart->products()->detach($product->id);
+                $cart->products()->detach($product->id);
+            });
 
-        // Invalidate cart cache
-        $this->cartCacheManager->invalidateCartCache($user->id);
+            // Invalidate cart cache after successful transaction
+            $this->cartCacheManager->invalidateCartCache($user->id);
+        } catch (\Exception $e) {
+            throw new CartOperationFailedException('Failed to remove product from cart: ' . $e->getMessage(), 0, $e);
+        }
     }
 
     /**
      * Clear the cart.
      *
      * @param  \App\Models\User  $user  The user whose cart to clear
+     * @throws CartOperationFailedException When the cart operation fails
      */
     public function clearCart(User $user): void
     {
-        $cart = $user->cart()->firstOrCreate();
+        try {
+            DB::transaction(function () use ($user) {
+                // Use lockForUpdate to prevent concurrent modifications
+                $cart = $user->cart()->lockForUpdate()->firstOrCreate();
 
-        $cart->products()->detach();
+                $cart->products()->detach();
+            });
 
-        // Invalidate cart cache
-        $this->cartCacheManager->invalidateCartCache($user->id);
+            // Invalidate cart cache after successful transaction
+            $this->cartCacheManager->invalidateCartCache($user->id);
+        } catch (\Exception $e) {
+            throw new CartOperationFailedException('Failed to clear cart: ' . $e->getMessage(), 0, $e);
+        }
     }
 }

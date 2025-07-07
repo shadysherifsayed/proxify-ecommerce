@@ -5,6 +5,8 @@ namespace App\Actions;
 use App\Models\Cart;
 use App\Models\Order;
 use Illuminate\Support\Facades\DB;
+use App\Exceptions\Cart\CartEmptyException;
+use App\Exceptions\Checkout\CheckoutFailedException;
 
 class CheckoutCartAction
 {
@@ -12,17 +14,19 @@ class CheckoutCartAction
      * Execute the checkout process for the given cart.
      *
      * @param  Cart  $cart  The cart to checkout
+     * @throws CartEmptyException When the cart is empty
+     * @throws CheckoutFailedException When the checkout process fails
      */
     public function execute(Cart $cart): void
     {
         if ($cart->products->isEmpty()) {
-            return;
+            throw new CartEmptyException('Cannot checkout an empty cart');
         }
 
         try {
             DB::beginTransaction();
 
-            // Ensure the cart is not empty
+            // Create the order
             $order = Order::create([
                 'user_id' => $cart->user_id,
                 'total_price' => $cart->products->sum(fn ($product) => $product->pivot->quantity * $product->price),
@@ -43,7 +47,7 @@ class CheckoutCartAction
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
-            throw new \Exception('Checkout failed: '.$e->getMessage());
+            throw new CheckoutFailedException('Checkout failed: ' . $e->getMessage(), 0, $e);
         }
     }
 }

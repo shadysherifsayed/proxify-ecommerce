@@ -18,15 +18,16 @@ test('can be instantiated', function () {
     expect($this->checkoutCartAction)->toBeInstanceOf(CheckoutCartAction::class);
 });
 
-test('does nothing when cart is empty', function () {
+test('throws exception when cart is empty', function () {
     // Arrange
     $user = User::factory()->create();
     $cart = Cart::factory()->create(['user_id' => $user->id]);
 
-    // Act
-    $this->checkoutCartAction->execute($cart);
-
-    // Assert
+    // Act & Assert
+    expect(fn () => $this->checkoutCartAction->execute($cart))
+        ->toThrow(\App\Exceptions\Cart\CartEmptyException::class, 'Cannot checkout an empty cart');
+    
+    // Verify no orders were created
     $this->assertDatabaseCount('orders', 0);
     $this->assertDatabaseCount('order_product', 0);
 });
@@ -233,3 +234,5 @@ test('sets timestamps on order products', function () {
     $this->assertNotNull($orderProduct->created_at);
     $this->assertNotNull($orderProduct->updated_at);
 });
+
+

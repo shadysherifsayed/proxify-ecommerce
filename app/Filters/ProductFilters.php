@@ -27,66 +27,63 @@ class ProductFilters
     /**
      * Filter products by title and description.
      *
-     * @param  string|null  $title
-     * @return ProductFilters
+     * @param  Builder  $query
+     * @param  string  $search
+     * @return void
      */
-    public function search(Builder $query, string $search): static
+    public function search(Builder $query, string $search): void
     {
         $query->where(function ($query) use ($search) {
             $query->where('title', 'like', "%{$search}%")
                 ->orWhere('description', 'like', "%{$search}%");
         });
-
-        return $this;
     }
 
     /**
      * Filter products by categories IDs.
-     *
-     * @param  int  $categoryId
-     * @return ProductFilters
+     * 
+     * @param  Builder  $query
+     * @param  array  $categoryIds
+     * @return void
      */
-    public function categories(Builder $query, array $categoryIds): static
+    public function categories(Builder $query, array $categoryIds): void
     {
         $query->whereIn('category_id', $categoryIds);
-
-        return $this;
     }
 
     /**
      * Filter products by minimum price.
-     *
-     * @return ProductFilters
+     * 
+     * @param  Builder  $query
+     * @param  int|float  $minPrice
+     * @return void
      */
     public function minPrice(Builder $query, int|float $minPrice)
     {
         $query->where('price', '>=', $minPrice);
-
-        return $this;
     }
 
     /**
      * Filter products by maximum price.
      *
-     * @return ProductFilters
+     * @param  Builder  $query
+     * @param  int|float  $maxPrice
+     * @return void
      */
-    public function maxPrice(Builder $query, int|float $maxPrice): static
+    public function maxPrice(Builder $query, int|float $maxPrice): void
     {
         $query->where('price', '<=', $maxPrice);
-
-        return $this;
     }
 
     /**
      * Filter products by min rating.
      *
      * @param  Builder  $query
-     * @return ProductFilters
+     * @param  int|float  $rating
+     * @return void
      */
-    public function minRating($query, int|float $rating)
+    public function minRating(Builder $query, int|float $rating): void
     {
         $query->where('rating', '>=', $rating);
-
-        return $this;
     }
 }

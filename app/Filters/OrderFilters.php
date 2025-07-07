@@ -2,17 +2,19 @@
 
 namespace App\Filters;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Builder;
 
 class OrderFilters
 {
     /**
      * Apply the filters to the query.
      *
+     * @param  Builder  $query
+     * @param  array  $filters
      * @return Builder
      */
-    public function applyFilters(Builder $query, array $filters)
+    public function applyFilters(Builder $query, array $filters): Builder
     {
         foreach ($filters as $key => $value) {
             $method = Str::camel($key);
@@ -26,67 +28,73 @@ class OrderFilters
 
     /**
      * Filter orders by user ID.
+     * 
+     * @param  Builder  $query
+     * @param  int  $userId
+     * @return void
      */
-    public function user(Builder $query, int $userId): self
+    public function user(Builder $query, int $userId): void
     {
         $query->where('user_id', $userId);
-
-        return $this;
     }
 
     /**
      * Filter orders by status.
+     * 
+     * @param  Builder  $query
+     * @param  string  $status
+     * @return void
      */
-    public function status(Builder $query, string $status): self
+    public function status(Builder $query, string $status): void
     {
         $query->where('status', $status);
 
-        return $this;
     }
-
     /**
      * Filter orders by minimum price.
-     *
-     * @return OrderFilters
+     * 
+     * @param  Builder  $query
+     * @param  int|float  $minPrice
+     * @return void
      */
-    public function minPrice(Builder $query, int|float $minPrice)
+    public function minPrice(Builder $query, int|float $minPrice): void
     {
         $query->where('total_price', '>=', $minPrice);
-
-        return $this;
     }
 
     /**
      * Filter orders by maximum price.
+     * 
+     * @param  Builder  $query
+     * @param  int|float  $maxPrice
+     * @return void
      */
-    public function maxPrice(Builder $query, int|float $maxPrice): self
+    public function maxPrice(Builder $query, int|float $maxPrice): void
     {
         $query->where('total_price', '<=', $maxPrice);
-
-        return $this;
     }
 
     /**
      * Filter orders by min created at.
-     *
+     * 
      * @param  Builder  $query
+     * @param  string  $date
+     * @return void
      */
-    public function dateFrom($query, $date): self
+    public function dateFrom(Builder $query, string $date): void
     {
         $query->where('created_at', '>=', $date);
-
-        return $this;
     }
 
     /**
      * Filter orders by max created at.
      *
      * @param  Builder  $query
+     * @param  string  $date
+     * @return void
      */
-    public function dateTo($query, $date): self
+    public function dateTo(Builder $query, string $date): void
     {
         $query->where('created_at', '<=', $date);
-
-        return $this;
     }
 }

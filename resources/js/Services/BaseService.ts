@@ -69,14 +69,10 @@ export class BaseService {
     // send data as query parameters for GET requests
     if (method.toUpperCase() === 'GET' && data) {
       const params = qs.stringify(data, {
-        arrayFormat: 'brackets', // Use brackets for array parameters
-        encode: false, // Disable encoding to preserve special characters
-        skipNulls: true, // Skip null values
-      });
-      console.log({
-        data,
-        endpoint,
-        params,
+        arrayFormat: 'brackets', 
+        encode: false,
+        skipNulls: true,
+        sort: (a, b) => a.localeCompare(b),
       });
       endpoint += `?${params}`;
       data = undefined; // clear data for GET requests

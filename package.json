@@ -1,6 +1,15 @@
 {
     "private": true,
     "type": "module",
+    "name": "ShadeLane",
+    "version": "1.0.0",
+    "description": "A modern e-commerce application built with Laravel and Vue.js",
+    "keywords": [
+        "laravel",
+        "vue",
+        "e-commerce",
+        "api"
+    ],
     "scripts": {
         "build": "vite build",
         "dev": "vite",
@@ -45,7 +54,6 @@
         "typescript": "^5.2.2",
         "vite": "^6.2.0",
         "vue": "^3.5.13",
-        "vue-router": "^4.5.1",
-        "ziggy-js": "^2.4.2"
+        "vue-router": "^4.5.1"
     }
 }

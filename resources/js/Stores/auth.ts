@@ -26,11 +26,11 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function logout() {
     try {
-      await AuthService.logout();
+      AuthService.logout();
+    } finally {
       cartStore.resetCart();
       ordersStore.resetOrders();
       productsStore.resetProducts();
-    } finally {
       user.value = null;
       token.value = null;
       router.push('/login');

@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 
 // Protected routes (authentication required)
 Route::middleware(['api', 'auth:sanctum'])
+    ->prefix('v1')
     ->group(function () {
         Route::apiResource('categories', CategoryController::class)->only('index');
 
@@ -34,6 +35,7 @@ Route::middleware(['api', 'auth:sanctum'])
 
 // Public routes (no authentication required)
 Route::middleware(['api', 'guest'])
+    ->prefix('v1')
     ->group(function () {
         Route::post('login', LoginController::class);
         Route::post('register', RegisterController::class);

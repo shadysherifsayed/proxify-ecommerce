@@ -1,29 +1,28 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/vue-starter-kit",
+    "name": "ShadeLane",
+    "description": "A modern e-commerce application built with Laravel and Vue.js",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
     "keywords": [
         "laravel",
-        "framework"
+        "vue",
+        "e-commerce",
+        "api"
     ],
     "license": "MIT",
     "require": {
         "php": "^8.2",
-        "inertiajs/inertia-laravel": "^2.0",
         "laravel/framework": "^12.0",
         "laravel/pulse": "^1.4",
         "laravel/sanctum": "^4.0",
         "laravel/telescope": "^5.9",
         "laravel/tinker": "^2.10.1",
-        "predis/predis": "*",
-        "tightenco/ziggy": "^2.4"
+        "predis/predis": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
         "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.18",
-        "laravel/sail": "^1.41",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.6",
         "pestphp/pest": "^3.8",

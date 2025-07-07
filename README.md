@@ -11,8 +11,7 @@ A modern e-commerce platform built with Laravel and Vue.js, featuring cart manag
 - **Redis** - Caching and session storage
 - **Laravel Telescope** - Application debugging
 - **Laravel Pulse** - Application monitoring
-- **Inertia.js** - Server-side rendering
-
+  
 ### Frontend
 - **Vue.js 3** - Frontend framework
 - **TypeScript** - Type safety

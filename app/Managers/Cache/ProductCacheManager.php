@@ -59,7 +59,7 @@ class ProductCacheManager extends CacheManager
      */
     private function getProductListKey(array $context): string
     {
-        return self::PRODUCT_LIST.':'.$this->generateHashKey($context);
+        return self::PRODUCT_LIST . ':' . $this->generateHashKey($context);
     }
 
     /**
@@ -67,7 +67,9 @@ class ProductCacheManager extends CacheManager
      */
     private function getProductKey(int $productId): string
     {
-        return self::PRODUCT_SINGLE.":{$productId}";
+        $key = md5($productId);
+
+        return self::PRODUCT_SINGLE . ":{$key}";
     }
 
     /**

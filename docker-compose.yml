@@ -21,6 +21,29 @@ services:
       - DB_DATABASE=${DB_DATABASE:-shadelane}
       - DB_USERNAME=${DB_USERNAME:-shadelane}
       - DB_PASSWORD=${DB_PASSWORD:-secret}
+
+  queue:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: shadelane_queue
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    depends_on:
+      - db
+      - redis
+    networks:
+      - shadelane_network
+    environment:
+      - DB_HOST=${DB_HOST:-db}
+      - DB_DATABASE=${DB_DATABASE:-shadelane}
+      - DB_USERNAME=${DB_USERNAME:-shadelane}
+      - DB_PASSWORD=${DB_PASSWORD:-secret}
+    command: php artisan queue:work --sleep=3 --tries=3 --max-time=3600
+
   db:
     image: mysql:8.0
     container_name: shadelane_db

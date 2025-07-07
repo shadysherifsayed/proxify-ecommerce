@@ -14,7 +14,9 @@ class CartCacheManager extends CacheManager
      */
     private function getCartKey(int $userId): string
     {
-        return self::CART_SINGLE."{$userId}";
+        $key = md5($userId);
+
+        return self::CART_SINGLE . ":{$key}";
     }
 
     /**

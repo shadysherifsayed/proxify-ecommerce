@@ -2,8 +2,6 @@
 
 namespace App\Managers\Cache;
 
-use Illuminate\Support\Facades\Cache;
-
 class OrderCacheManager extends CacheManager
 {
     private const ORDER_SINGLE = 'orders:single';
@@ -64,7 +62,7 @@ class OrderCacheManager extends CacheManager
      */
     private function getOrdersListTag(int $userId): string
     {
-        return self::ORDER_LIST.":{$userId}";
+        return self::ORDER_LIST . ":{$userId}";
     }
 
     /**
@@ -72,7 +70,7 @@ class OrderCacheManager extends CacheManager
      */
     private function getOrdersListKey(array $context): string
     {
-        return self::ORDER_LIST.':'.$this->generateHashKey($context);
+        return self::ORDER_LIST . ':' . $this->generateHashKey($context);
     }
 
     /**
@@ -80,7 +78,9 @@ class OrderCacheManager extends CacheManager
      */
     private function getOrderKey(int $orderId): string
     {
-        return self::ORDER_SINGLE.":{$orderId}";
+        $key = md5($orderId);
+
+        return self::ORDER_SINGLE . ":{$key}";
     }
 
     /**

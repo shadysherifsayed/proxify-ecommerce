@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-use App\Contracts\Filterable;
-use App\Contracts\Sortable;
 use App\Enums\OrderStatus;
+use App\Contracts\Sortable;
+use App\Contracts\Filterable;
 use App\Filters\OrderFilters;
+use Illuminate\Database\Eloquent\Model;
 use App\Traits\Sortable as TraitsSortable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model implements Sortable, Filterable
 {

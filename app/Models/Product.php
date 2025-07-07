@@ -10,30 +10,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-/**
- * Product Model
- *
- * Represents a product in the e-commerce system with category association,
- * pricing information, ratings, and image handling capabilities.
- *
- * @property int $id The unique identifier for the product
- * @property string $title The product title/name
- * @property float $price The product price in decimal format
- * @property string $description The detailed product description
- * @property string $image The product image path or URL
- * @property float $rating The average product rating (0-5 scale)
- * @property int $reviews_count The total number of reviews for this product
- * @property int $category_id The foreign key referencing the product's category
- * @property string|null $external_id External system identifier for product synchronization
- * @property \Illuminate\Support\Carbon $created_at Timestamp when the product was created
- * @property \Illuminate\Support\Carbon $updated_at Timestamp when the product was last updated
- * @property-read \App\Models\Category $category The category this product belongs to
- *
- * @method static \Database\Factories\ProductFactory factory() Create a new factory instance for the model
- * @method static \Illuminate\Database\Eloquent\Builder|Product newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Product newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Product query()
- */
 class Product extends Model implements Filterable, Sortable
 {
     use HasFactory, TraitsSortable;

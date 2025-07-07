@@ -2,8 +2,6 @@
 
 namespace App\Managers\Cache;
 
-use Illuminate\Support\Facades\Cache;
-
 class CartCacheManager extends CacheManager
 {
     private const CART_SINGLE = 'carts:single';

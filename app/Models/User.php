@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -46,12 +48,28 @@ class User extends Authenticatable
         ];
     }
 
-    public function cart()
+    /**
+     * Get the cart associated with the user.
+     *
+     * This method defines a one-to-one relationship between the User and Cart models.
+     * It allows access to the user's shopping cart.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function cart(): HasOne
     {
         return $this->hasOne(Cart::class);
     }
 
-    public function orders()
+    /**
+     * Get the orders associated with the user.
+     *
+     * This method defines a one-to-many relationship between the User and Order models.
+     * It allows access to all orders placed by the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function orders(): HasMany
     {
         return $this->hasMany(Order::class);
     }

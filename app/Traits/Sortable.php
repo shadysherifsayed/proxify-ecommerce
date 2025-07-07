@@ -30,6 +30,14 @@ trait Sortable
     }
 
 
+    /**
+     * Get the fields that can be used for sorting.
+     *
+     * Returns an array of field names that are valid for sorting operations.
+     * This is used to validate sort parameters in the Sortable trait.
+     *
+     * @return array<string> List of sortable field names
+     */
     public function sortableFields(): array
     {
         return [

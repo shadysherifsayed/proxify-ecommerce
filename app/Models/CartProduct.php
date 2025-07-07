@@ -3,14 +3,46 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class CartProduct extends Pivot
 {
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
     protected $table = 'cart_product';
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = [
         'cart_id',
         'product_id',
         'quantity',
     ];
+
+    /**
+     * Get the cart.
+     * 
+     * @return BelongsTo
+     */
+    public function cart(): BelongsTo
+    {
+        return $this->belongsTo(Cart::class);
+    }
+
+    /**
+     * Get the product.
+     * 
+     * @return BelongsTo
+     */
+    public function product(): BelongsTo
+    {
+        return $this->belongsTo(Product::class);
+    }
 }

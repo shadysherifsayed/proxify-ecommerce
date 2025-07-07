@@ -48,7 +48,6 @@ class OrderFilters
     public function status(Builder $query, string $status): void
     {
         $query->where('status', $status);
-
     }
     /**
      * Filter orders by minimum price.
@@ -59,6 +58,10 @@ class OrderFilters
      */
     public function minPrice(Builder $query, int|float $minPrice): void
     {
+        if (!is_numeric($minPrice) || $minPrice < 0) {
+            return;
+        }
+
         $query->where('total_price', '>=', $minPrice);
     }
 
@@ -71,6 +74,10 @@ class OrderFilters
      */
     public function maxPrice(Builder $query, int|float $maxPrice): void
     {
+        if (!is_numeric($maxPrice) || $maxPrice < 0) {
+            return;
+        }
+
         $query->where('total_price', '<=', $maxPrice);
     }
 
@@ -83,6 +90,10 @@ class OrderFilters
      */
     public function dateFrom(Builder $query, string $date): void
     {
+        if (!strtotime($date)) {
+            return;
+        }
+
         $query->where('created_at', '>=', $date);
     }
 
@@ -95,6 +106,10 @@ class OrderFilters
      */
     public function dateTo(Builder $query, string $date): void
     {
+        if (!strtotime($date)) {
+            return;
+        }
+
         $query->where('created_at', '<=', $date);
     }
 }

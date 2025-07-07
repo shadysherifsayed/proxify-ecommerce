@@ -1,5 +1,7 @@
 <?php
 
+use App\Helpers\DatabaseHelper;
+use Illuminate\Container\Attributes\Database;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -29,8 +31,10 @@ return new class extends Migration
             $table->index('rating');
             $table->index('reviews_count');
             $table->index('external_id');
-            $table->fullText(['title', 'description']);
 
+            if (DatabaseHelper::supportsFullTextSearch()) {
+                $table->fullText(['title', 'description']);
+            }
         });
     }
 

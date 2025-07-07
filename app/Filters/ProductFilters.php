@@ -2,6 +2,7 @@
 
 namespace App\Filters;
 
+use App\Helpers\DatabaseHelper;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
@@ -33,7 +34,18 @@ class ProductFilters
      */
     public function search(Builder $query, string $search): void
     {
-        $query->whereRaw('MATCH(title, description) AGAINST(? IN BOOLEAN MODE)', [$search . '*']);
+        if (empty($search)) {
+            return;
+        }
+
+        if (strlen($search) < 3 || !DatabaseHelper::supportsFullTextSearch()) {
+            $query->where(function (Builder $query) use ($search) {
+                $query->where('title', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%");
+            });
+        } else {
+            $query->whereRaw('MATCH(title, description) AGAINST(? IN BOOLEAN MODE)', [$search . '*']);
+        }
     }
     
     /**
@@ -45,6 +57,10 @@ class ProductFilters
      */
     public function categories(Builder $query, array $categoryIds): void
     {
+        if (count($categoryIds) === 0) {
+            return;
+        }
+
         $query->whereIn('category_id', $categoryIds);
     }
 
@@ -57,6 +73,10 @@ class ProductFilters
      */
     public function minPrice(Builder $query, int|float $minPrice)
     {
+        if (!is_numeric($minPrice) || $minPrice < 0) {
+            return;
+        }
+
         $query->where('price', '>=', $minPrice);
     }
 
@@ -69,6 +89,10 @@ class ProductFilters
      */
     public function maxPrice(Builder $query, int|float $maxPrice): void
     {
+        if (!is_numeric($maxPrice) || $maxPrice < 0) {
+            return;
+        }
+
         $query->where('price', '<=', $maxPrice);
     }
 
@@ -81,6 +105,10 @@ class ProductFilters
      */
     public function minRating(Builder $query, int|float $rating): void
     {
+        if (!is_numeric($rating) || $rating < 0) {
+            return;
+        }
+
         $query->where('rating', '>=', $rating);
     }
 }

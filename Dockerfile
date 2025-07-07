@@ -1,5 +1,5 @@
 # Use the official PHP image with FPM
-FROM php:8.2-fpm
+FROM php:8.4-fpm
 
 # Set working directory
 WORKDIR /var/www/html

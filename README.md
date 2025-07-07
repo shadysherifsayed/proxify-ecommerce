@@ -5,7 +5,7 @@ A modern e-commerce platform built with Laravel and Vue.js, featuring cart manag
 ## � Tech Stack
 
 ### Backend
-- **PHP 8.2+** - Server-side language
+- **PHP 8.4+** - Server-side language
 - **Laravel 12** - PHP framework
 - **MySQL** - Primary database
 - **Redis** - Caching and session storage
@@ -144,8 +144,38 @@ docker-compose exec app npm run dev
 After successful setup, you can access:
 
 - **Application**: http://localhost:8000
+- **Vite Dev Server**: http://localhost:5174 (for hot reloading)
+- **Laravel Telescope**: http://localhost:8000/telescope
+- **Laravel Pulse**: http://localhost:8000/pulse
 - **phpMyAdmin**: http://localhost:8080
-- **Vite Dev Server**: http://localhost:5174 (development only)
+
+#### PHPMyAdmin Login:
+- **Username**: `root` or `shadelane`
+- **Password**: `secret`
+
+
+## 📦 Sync Products
+```bash
+# Run all PHP tests
+docker-compose exec app php artisan sync:products
+```
+
+## 🧪 Testing
+
+### PHP Tests (Pest)
+```bash
+# Run all PHP tests
+docker-compose exec app php artisan test
+
+# Run specific test file
+docker-compose exec app php artisan test tests/Feature/CartTest.php
+```
+
+### JavaScript Tests (Vitest)
+```bash
+# Run JavaScript tests
+docker-compose exec app npm run test
+```
 
 ## 🚨 Common Issues & Troubleshooting
 
@@ -255,22 +285,6 @@ docker-compose exec app composer clear-cache
 docker-compose exec app composer install --no-dev --optimize-autoloader
 ```
 
-## 🧪 Testing
-
-### PHP Tests (Pest)
-```bash
-# Run all PHP tests
-docker-compose exec app php artisan test
-
-# Run specific test file
-docker-compose exec app php artisan test tests/Feature/CartTest.php
-```
-
-### JavaScript Tests (Vitest)
-```bash
-# Run JavaScript tests
-docker-compose exec app npm run test
-```
 
 ## 🛠️ Development Commands
 
@@ -293,31 +307,6 @@ docker-compose exec app npm run build
 docker-compose exec app npm run dev
 ```
 
-### 4. Access the Application
-
-- **Main Application**: http://localhost:8000
-- **PHPMyAdmin**: http://localhost:8080
-- **Vite Dev Server**: http://localhost:5174 (for hot reloading)
-- **Laravel Telescope**: http://localhost:8000/telescope
-- **Laravel Pulse**: http://localhost:8000/pulse
-
-#### PHPMyAdmin Login:
-- **Username**: `root` or `shadelane`
-- **Password**: `secret`
-
-### Running Tests
-
-```bash
-# PHP Tests (Pest)
-docker-compose exec app php artisan test
-
-# JavaScript Tests (Vitest)
-docker-compose exec app npm test
-
-# Run specific test suite
-docker-compose exec app php artisan test --filter=ProductController
-```
-
 ## 📦 Docker Services
 
 The application runs the following services:
@@ -326,6 +315,7 @@ The application runs the following services:
 - **db**: MySQL database
 - **redis**: Redis cache server
 - **phpmyadmin**: Database management interface
+- **queue**: Laravel Queue Worker (Using Redis by Default)
 
 ## 🔄 Docker Management
 

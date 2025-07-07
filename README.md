@@ -41,7 +41,7 @@ The easiest way to set up the application is using the provided setup script:
 
 ```bash
 # Clone the repository
-git clone `https://github.com/shadysherifsayed/proxify-ecommerce.git`
+git clone https://github.com/shadysherifsayed/proxify-ecommerce.git
 cd proxify-ecommerce
 
 # Make setup script executable

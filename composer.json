@@ -1,6 +1,6 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "ShadeLane",
+    "name": "proxify/ecommerce",
     "description": "A modern e-commerce application built with Laravel and Vue.js",
     "type": "project",
     "keywords": [

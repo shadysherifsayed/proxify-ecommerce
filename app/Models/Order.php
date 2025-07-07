@@ -2,15 +2,15 @@
 
 namespace App\Models;
 
-use App\Enums\OrderStatus;
-use App\Contracts\Sortable;
 use App\Contracts\Filterable;
+use App\Contracts\Sortable;
+use App\Enums\OrderStatus;
 use App\Filters\OrderFilters;
-use Illuminate\Database\Eloquent\Model;
 use App\Traits\Sortable as TraitsSortable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class Order extends Model implements Sortable, Filterable
+class Order extends Model implements Filterable, Sortable
 {
     use HasFactory, TraitsSortable;
 
@@ -53,20 +53,20 @@ class Order extends Model implements Sortable, Filterable
             ->withPivot(['quantity', 'price']);
     }
 
-     /**
+    /**
      * Apply filters to the orders query.
      *
      * This method uses the OrderFilters class to apply various filtering criteria
      * based on the provided filters array. It allows dynamic filtering of orders
      * based on attributes like user ID, status, price range, etc.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query The query builder instance
-     * @param array $filters Associative array of filter criteria (e.g., ['user' => 1, 'min_price' => 100])
+     * @param  \Illuminate\Database\Eloquent\Builder  $query  The query builder instance
+     * @param  array  $filters  Associative array of filter criteria (e.g., ['user' => 1, 'min_price' => 100])
      * @return \Illuminate\Database\Eloquent\Builder The modified query with filters applied
      */
     public function scopeFilter($query, array $filters = [])
     {
-        (new OrderFilters())->applyFilters($query, $filters);
+        (new OrderFilters)->applyFilters($query, $filters);
 
         return $query;
     }

@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class OrderProduct extends Pivot
 {
@@ -21,11 +21,8 @@ class OrderProduct extends Pivot
         'price' => 'float',
     ];
 
-
-     /**
+    /**
      * Get the order.
-     * 
-     * @return BelongsTo
      */
     public function order(): BelongsTo
     {
@@ -34,8 +31,6 @@ class OrderProduct extends Pivot
 
     /**
      * Get the product.
-     * 
-     * @return BelongsTo
      */
     public function product(): BelongsTo
     {

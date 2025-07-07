@@ -2,28 +2,28 @@
 
 namespace App\Http\Controllers\Api\V1\Auth;
 
-use App\Services\AuthService;
 use App\Http\Controllers\Controller;
-use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\Api\V1\Auth\RegisterRequest;
+use App\Services\AuthService;
+use Symfony\Component\HttpFoundation\Response;
 
 class RegisterController extends Controller
 {
     /**
      * Create a new controller instance
-     * 
-     * @param AuthService $authService Service for authentication operations
+     *
+     * @param  AuthService  $authService  Service for authentication operations
      */
     public function __construct(private AuthService $authService) {}
 
     /**
      * Register a new user account
-     * 
+     *
      * Creates a new user account with the provided registration data and
      * returns the user information along with an authentication token
      * for immediate login.
-     * 
-     * @param RegisterRequest $request Validated registration request containing user data
+     *
+     * @param  RegisterRequest  $request  Validated registration request containing user data
      * @return \Illuminate\Http\JsonResponse JSON response with user data and auth token (201 Created)
      */
     public function __invoke(RegisterRequest $request)

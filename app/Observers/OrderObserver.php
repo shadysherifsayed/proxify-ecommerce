@@ -2,10 +2,10 @@
 
 namespace App\Observers;
 
-use App\Models\Order;
-use Illuminate\Support\Facades\App;
 use App\Managers\Cache\CartCacheManager;
 use App\Managers\Cache\OrderCacheManager;
+use App\Models\Order;
+use Illuminate\Support\Facades\App;
 
 class OrderObserver
 {
@@ -39,12 +39,8 @@ class OrderObserver
         $this->invalidateOrdersListCache($order->user_id);
     }
 
-
     /**
      * Invalidate the cache for a single order.
-     * 
-     * @param int $orderId
-     * @return void
      */
     private function invalidateOrderCache(int $orderId): void
     {
@@ -53,9 +49,8 @@ class OrderObserver
 
     /**
      * Invalidate the cache for all orders.
-     * 
-     * @param int $orderId
-     * @return void
+     *
+     * @param  int  $orderId
      */
     private function invalidateOrdersListCache(int $userId): void
     {
@@ -64,9 +59,6 @@ class OrderObserver
 
     /**
      * Invalidate the cache for a user's cart.
-     * 
-     * @param int $user
-     * @return void
      */
     private function invalidateCartCache(int $user): void
     {

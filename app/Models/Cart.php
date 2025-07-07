@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+
 class Cart extends Model
 {
     /** @use HasFactory<\Database\Factories\CartFactory> */
@@ -13,8 +14,6 @@ class Cart extends Model
 
     /**
      * The products associated with the cart.
-     * 
-     * @return BelongsToMany
      */
     public function products(): BelongsToMany
     {
@@ -26,8 +25,6 @@ class Cart extends Model
 
     /**
      * Get the user that owns the cart.
-     * 
-     * @return BelongsTo
      */
     public function user(): BelongsTo
     {

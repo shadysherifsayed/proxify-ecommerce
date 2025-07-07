@@ -7,12 +7,9 @@ use Illuminate\Support\Str;
 
 class ProductFilters
 {
-
     /**
      * Apply the filters to the query.
      *
-     * @param Builder $query
-     * @param array $filters
      * @return Builder
      */
     public function applyFilters(Builder $query, array $filters)
@@ -30,8 +27,7 @@ class ProductFilters
     /**
      * Filter products by title and description.
      *
-     * @param Builder $query
-     * @param string|null $title
+     * @param  string|null  $title
      * @return ProductFilters
      */
     public function search(Builder $query, string $search): static
@@ -47,8 +43,7 @@ class ProductFilters
     /**
      * Filter products by categories IDs.
      *
-     * @param Builder $query
-     * @param int $categoryId
+     * @param  int  $categoryId
      * @return ProductFilters
      */
     public function categories(Builder $query, array $categoryIds): static
@@ -61,8 +56,6 @@ class ProductFilters
     /**
      * Filter products by minimum price.
      *
-     * @param Builder $query
-     * @param float|int $minPrice
      * @return ProductFilters
      */
     public function minPrice(Builder $query, int|float $minPrice)
@@ -71,11 +64,10 @@ class ProductFilters
 
         return $this;
     }
+
     /**
      * Filter products by maximum price.
      *
-     * @param Builder $query
-     * @param float|int $maxPrice
      * @return ProductFilters
      */
     public function maxPrice(Builder $query, int|float $maxPrice): static
@@ -85,12 +77,10 @@ class ProductFilters
         return $this;
     }
 
-
     /**
      * Filter products by min rating.
      *
-     * @param Builder $query
-     * @param float|int $rating
+     * @param  Builder  $query
      * @return ProductFilters
      */
     public function minRating($query, int|float $rating)

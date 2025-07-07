@@ -2,9 +2,9 @@
 
 namespace App\Observers;
 
+use App\Managers\Cache\ProductCacheManager;
 use App\Models\Product;
 use Illuminate\Support\Facades\App;
-use App\Managers\Cache\ProductCacheManager;
 
 class ProductObserver
 {
@@ -36,12 +36,8 @@ class ProductObserver
         $this->invalidateProductsListCache();
     }
 
-
     /**
      * Invalidate the cache for a single product.
-     * 
-     * @param int $productId
-     * @return void
      */
     private function invalidateProductCache(int $productId): void
     {
@@ -50,9 +46,8 @@ class ProductObserver
 
     /**
      * Invalidate the cache for all products.
-     * 
-     * @param int $productId
-     * @return void
+     *
+     * @param  int  $productId
      */
     private function invalidateProductsListCache(): void
     {

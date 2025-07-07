@@ -2,10 +2,10 @@
 
 namespace App\Services;
 
-use App\Models\Cart;
-use App\Models\User;
-use App\Models\Product;
 use App\Managers\Cache\CartCacheManager;
+use App\Models\Cart;
+use App\Models\Product;
+use App\Models\User;
 
 class CartService
 {
@@ -23,7 +23,7 @@ class CartService
     {
         return $this->cartCacheManager->rememberCart(
             $user->id,
-            fn() => $user->cart()->firstOrCreate()->load('products')
+            fn () => $user->cart()->firstOrCreate()->load('products')
         );
     }
 
@@ -33,7 +33,6 @@ class CartService
      * @param  \App\Models\User  $user  The user to add product to cart for
      * @param  \App\Models\Product  $product  The product to add to the cart
      * @param  int  $quantity  The quantity of the product to add
-     * @return void
      */
     public function addProduct(User $user, Product $product, int $quantity): void
     {

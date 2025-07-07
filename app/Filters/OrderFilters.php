@@ -7,12 +7,9 @@ use Illuminate\Support\Str;
 
 class OrderFilters
 {
-
     /**
      * Apply the filters to the query.
      *
-     * @param Builder $query
-     * @param array $filters
      * @return Builder
      */
     public function applyFilters(Builder $query, array $filters)
@@ -29,10 +26,6 @@ class OrderFilters
 
     /**
      * Filter orders by user ID.
-     *
-     * @param Builder $query
-     * @param int $userId
-     * @return OrderFilters
      */
     public function user(Builder $query, int $userId): self
     {
@@ -43,10 +36,6 @@ class OrderFilters
 
     /**
      * Filter orders by status.
-     *
-     * @param Builder $query
-     * @param string $status
-     * @return OrderFilters
      */
     public function status(Builder $query, string $status): self
     {
@@ -58,8 +47,6 @@ class OrderFilters
     /**
      * Filter orders by minimum price.
      *
-     * @param Builder $query
-     * @param float|int $minPrice
      * @return OrderFilters
      */
     public function minPrice(Builder $query, int|float $minPrice)
@@ -68,12 +55,9 @@ class OrderFilters
 
         return $this;
     }
+
     /**
      * Filter orders by maximum price.
-     *
-     * @param Builder $query
-     * @param float|int $maxPrice
-     * @return OrderFilters
      */
     public function maxPrice(Builder $query, int|float $maxPrice): self
     {
@@ -82,13 +66,10 @@ class OrderFilters
         return $this;
     }
 
-
     /**
      * Filter orders by min created at.
      *
-     * @param Builder $query
-     * @param $date
-     * @return OrderFilters
+     * @param  Builder  $query
      */
     public function dateFrom($query, $date): self
     {
@@ -100,9 +81,7 @@ class OrderFilters
     /**
      * Filter orders by max created at.
      *
-     * @param Builder $query
-     * @param $date
-     * @return OrderFilters
+     * @param  Builder  $query
      */
     public function dateTo($query, $date): self
     {

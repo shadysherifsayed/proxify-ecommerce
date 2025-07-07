@@ -2,10 +2,10 @@
 
 namespace App\Actions;
 
-use App\Models\Product;
-use App\Models\Category;
-use Illuminate\Support\Facades\Log;
 use App\Clients\FakeStore\ProductClient;
+use App\Models\Category;
+use App\Models\Product;
+use Illuminate\Support\Facades\Log;
 
 class SyncProductsAction
 {

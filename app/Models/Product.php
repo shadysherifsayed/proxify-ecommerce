@@ -79,7 +79,6 @@ class Product extends Model implements Filterable, Sortable
             : asset("storage/{$image}");
     }
 
-
     /**
      * Apply filters to the product query.
      *
@@ -87,13 +86,13 @@ class Product extends Model implements Filterable, Sortable
      * based on the provided filters array. It allows dynamic filtering of products
      * based on attributes like category, price range, rating, etc.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query The query builder instance
-     * @param array $filters Associative array of filter criteria (e.g., ['category' => 1, 'min_price' => 100])
+     * @param  \Illuminate\Database\Eloquent\Builder  $query  The query builder instance
+     * @param  array  $filters  Associative array of filter criteria (e.g., ['category' => 1, 'min_price' => 100])
      * @return \Illuminate\Database\Eloquent\Builder The modified query with filters applied
      */
     public function scopeFilter($query, array $filters = [])
     {
-        (new ProductFilters())->applyFilters($query, $filters);
+        (new ProductFilters)->applyFilters($query, $filters);
 
         return $query;
     }

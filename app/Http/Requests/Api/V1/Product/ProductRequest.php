@@ -50,7 +50,7 @@ class ProductRequest extends FormRequest
             'sort.field' => [
                 'sometimes',
                 'string',
-                Rule::in((new Product())->sortableFields()),
+                Rule::in((new Product)->sortableFields()),
             ],
             'sort.direction' => [
                 'sometimes',

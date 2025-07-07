@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class CartProduct extends Pivot
 {
-
     /**
      * The table associated with the model.
      *
@@ -28,8 +27,6 @@ class CartProduct extends Pivot
 
     /**
      * Get the cart.
-     * 
-     * @return BelongsTo
      */
     public function cart(): BelongsTo
     {
@@ -38,8 +35,6 @@ class CartProduct extends Pivot
 
     /**
      * Get the product.
-     * 
-     * @return BelongsTo
      */
     public function product(): BelongsTo
     {

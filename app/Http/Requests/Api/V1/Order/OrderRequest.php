@@ -2,11 +2,10 @@
 
 namespace App\Http\Requests\Api\V1\Order;
 
-use App\Models\Product;
 use App\Enums\OrderStatus;
 use App\Models\Order;
-use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class OrderRequest extends FormRequest
 {
@@ -51,7 +50,7 @@ class OrderRequest extends FormRequest
             'sort.field' => [
                 'sometimes',
                 'string',
-                Rule::in((new Order())->sortableFields()),
+                Rule::in((new Order)->sortableFields()),
             ],
             'sort.direction' => [
                 'sometimes',

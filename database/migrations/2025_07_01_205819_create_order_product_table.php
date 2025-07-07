@@ -17,8 +17,8 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
             $table->unsignedInteger('quantity')->default(1)->min(1);
             $table->decimal('price', 10, 2);
-            $table->unique(['order_id', 'product_id'], 'order_product_unique');
-            $table->index(['order_id', 'product_id'], 'order_product_index');
+            $table->unique(['order_id', 'product_id']);
+            $table->index(['order_id', 'product_id']);
             $table->timestamps();
         });
     }

@@ -21,9 +21,16 @@ return new class extends Migration
             $table->float('rating')->default(0);
             $table->integer('reviews_count')->default(0);
             $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
+            $table->timestamps();
+
             $table->unique(['title', 'category_id']);
             $table->index('category_id');
-            $table->timestamps();
+            $table->index('price');
+            $table->index('rating');
+            $table->index('reviews_count');
+            $table->index('external_id');
+            $table->fullText(['title', 'description']);
+
         });
     }
 

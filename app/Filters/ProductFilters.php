@@ -33,12 +33,9 @@ class ProductFilters
      */
     public function search(Builder $query, string $search): void
     {
-        $query->where(function ($query) use ($search) {
-            $query->where('title', 'like', "%{$search}%")
-                ->orWhere('description', 'like', "%{$search}%");
-        });
+        $query->whereRaw('MATCH(title, description) AGAINST(? IN BOOLEAN MODE)', [$search . '*']);
     }
-
+    
     /**
      * Filter products by categories IDs.
      * 

@@ -2,9 +2,9 @@
 
 namespace App\Filters;
 
+use Illuminate\Support\Str;
 use App\Helpers\DatabaseHelper;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Str;
 
 class ProductFilters
 {

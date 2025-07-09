@@ -77,6 +77,6 @@ abstract class CacheManager
      */
     protected function generateHashKey(...$context): string
     {
-        return md5(serialize($context));
+        return md5(json_encode($context));
     }
 }

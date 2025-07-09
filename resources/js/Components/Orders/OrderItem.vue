@@ -37,7 +37,7 @@ function formatDate(dateString: string): string {
 </script>
 
 <template>
-  <v-card elevation="2" class="mb-4" :class="statusColor">
+  <v-card elevation="0" class="mb-4" :class="statusColor">
     <v-card-title class="d-flex justify-space-between align-center pb-2">
       <div>
         <h3 class="text-h6 font-weight-bold">Order #{{ order.id }}</h3>

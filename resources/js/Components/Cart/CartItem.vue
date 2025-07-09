@@ -13,7 +13,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <v-card class="d-flex flex-row align-center pa-3 mb-3" elevation="2">
+  <v-card class="d-flex flex-row align-center pa-3 mb-3" elevation="0">
     <v-img
       height="80"
       width="80"

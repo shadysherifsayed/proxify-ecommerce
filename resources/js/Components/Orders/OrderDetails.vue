@@ -33,7 +33,7 @@ function formatDate(dateString: string): string {
 
 <template>
   <!-- Order Header -->
-  <v-card elevation="2" class="mb-6">
+  <v-card elevation="0" class="mb-6">
     <v-card-title class="d-flex justify-space-between align-center">
       <div>
         <h1 class="text-h4 font-weight-bold">Order #{{ order.id }}</h1>
@@ -82,7 +82,7 @@ function formatDate(dateString: string): string {
   </v-card>
 
   <!-- Order Items -->
-  <v-card elevation="2">
+  <v-card elevation="0">
     <v-card-title>
       <v-icon icon="mdi-package-variant" class="mr-2"></v-icon>
       Order Items

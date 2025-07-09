@@ -158,7 +158,7 @@ onMounted(fetchProduct);
         <v-row class="mb-6">
           <!-- Product Image -->
           <v-col cols="12" lg="4">
-            <v-card class="product-image-card" elevation="3">
+            <v-card class="product-image-card" elevation="0">
               <div class="pa-4">
                 <v-img
                   :src="product.image"
@@ -226,77 +226,3 @@ onMounted(fetchProduct);
     </v-container>
   </MainLayout>
 </template>
-
-<style scoped>
-.product-image-card {
-  position: sticky;
-  top: 20px;
-  border-radius: 16px !important;
-  overflow: hidden;
-}
-
-.product-info-card {
-  border-radius: 16px !important;
-  overflow: hidden;
-}
-
-.product-image {
-  border-radius: 12px;
-  transition: all 0.3s ease;
-}
-
-.product-image:hover {
-  transform: scale(1.02);
-}
-
-.v-card {
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-
-.v-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
-}
-
-.text-h3 {
-  line-height: 1.2;
-}
-
-.line-height-relaxed {
-  line-height: 1.7;
-}
-
-.v-rating {
-  margin-right: 8px;
-}
-
-.v-chip {
-  transition: all 0.2s ease;
-}
-
-.v-chip:hover {
-  transform: translateY(-1px);
-}
-
-.v-btn {
-  transition: all 0.2s ease;
-}
-
-.v-btn:hover {
-  transform: translateY(-1px);
-}
-
-.bg-grey-lighten-5 {
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
-}
-
-@media (max-width: 960px) {
-  .product-image-card {
-    position: static;
-  }
-
-  .v-card:hover {
-    transform: none;
-  }
-}
-</style>

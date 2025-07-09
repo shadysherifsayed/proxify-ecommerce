@@ -40,7 +40,7 @@ watch(
 </script>
 
 <template>
-  <v-card elevation="3" class="h-100 product-info-card">
+  <v-card elevation="0" class="h-100 product-info-card">
     <v-card-text class="pa-6">
       <!-- Title -->
       <div class="mb-6">
